@@ -69,7 +69,30 @@ create policy "members insert media" on media
 create policy "members delete media" on media
   for delete using (family_id in (select my_family_ids()));
 
--- NOTE: creating a family + first membership should happen in an edge function
--- (or a SECURITY DEFINER rpc) so the creator is atomically added as 'admin'.
+-- ---------- Atomic family creation ----------
+-- Creates a family and adds the caller as its 'admin' in one transaction.
+-- SECURITY DEFINER so it can insert the membership the RLS policies then gate on.
+create or replace function create_family(p_name text)
+returns uuid language plpgsql security definer set search_path = public as $$
+declare new_id uuid;
+begin
+  if auth.uid() is null then raise exception 'not authenticated'; end if;
+  insert into families(name) values (coalesce(nullif(trim(p_name), ''), 'My family'))
+    returning id into new_id;
+  insert into family_members(family_id, user_id, role) values (new_id, auth.uid(), 'admin');
+  return new_id;
+end;
+$$;
+
+-- Members can insert children/manage their family rows.
+create policy "members insert children" on children
+  for insert with check (family_id in (select my_family_ids()));
+create policy "admins update family" on families
+  for update using (id in (select my_family_ids()));
+
 -- Storage: create a private bucket named 'family-media' and add storage
--- policies that mirror my_family_ids() on the object path prefix.
+-- policies that mirror my_family_ids() on the object path prefix, e.g.:
+--   create policy "family media read" on storage.objects for select
+--     using (bucket_id = 'family-media'
+--            and (split_part(name,'/',1))::uuid in (select my_family_ids()));
+-- (repeat for insert/delete with `with check` / `using`).

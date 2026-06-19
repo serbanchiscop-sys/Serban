@@ -10,6 +10,7 @@
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { isNative } from '../lib/platform';
 import { G } from '../data/content';
+import { uploadMedia } from './storage';
 
 export type LocalPhoto = {
   id: string;
@@ -48,6 +49,26 @@ export async function pickFromLibrary(): Promise<LocalPhoto | null> {
     return { id: photo.path ?? photo.webPath, src: photo.webPath, isGradient: false };
   } catch {
     return null; // user cancelled or denied
+  }
+}
+
+/**
+ * Pick a photo from the library and upload it to the family's storage.
+ * Real on device with a backend; a no-op success in demo/web mode.
+ */
+export async function importAndUpload(
+  familyId: string,
+  childId: string | null,
+): Promise<{ ok: boolean; error?: string }> {
+  const picked = await pickFromLibrary();
+  if (!picked) return { ok: false, error: 'cancelled' };
+  if (picked.isGradient) return { ok: true }; // demo/web: nothing to upload
+  try {
+    const blob = await (await fetch(picked.src)).blob();
+    const filename = picked.id.split('/').pop() || 'photo.jpg';
+    return await uploadMedia(familyId, childId, blob, filename);
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'upload failed' };
   }
 }
 

@@ -1,16 +1,29 @@
 /* Timeline tab — AI feed grouped by child, milestone card, reel banner, grids. */
+import { useState } from 'react';
 import { useApp } from '../state/store';
 import { useAuth } from '../state/auth';
 import { CHILDREN, G } from '../data/content';
-import { Sparkle, SearchIcon, Play } from '../components/Icon';
+import { Sparkle, SearchIcon, Play, Plus } from '../components/Icon';
+import { importAndUpload } from '../services/photos';
 
 const DEEP = '#1B4794';
 
 export function Timeline() {
   const { state, open, setChild } = useApp();
-  const { account } = useAuth();
+  const { account, enabled } = useAuth();
   const household = account?.household ?? 'Sofia’s family';
   const notPremium = !state.premium;
+
+  // Real photo import — only surfaced when a backend is configured, so the
+  // offline demo stays pixel-identical.
+  const [uploading, setUploading] = useState(false);
+  const canUpload = enabled && !!account?.familyId;
+  const onAddPhotos = async () => {
+    if (!account?.familyId || uploading) return;
+    setUploading(true);
+    await importAndUpload(account.familyId, state.child === 'all' ? null : state.child);
+    setUploading(false);
+  };
 
   return (
     <div style={{ padding: '6px 18px 26px' }}>
@@ -20,11 +33,20 @@ export function Timeline() {
           <div style={{ fontSize: 13, color: '#8A93A6', fontWeight: 600 }}>Good morning</div>
           <div style={{ fontSize: 25, fontWeight: 800, color: '#15233F', letterSpacing: '-.03em', lineHeight: 1.1 }}>{household}</div>
         </div>
-        <button onClick={() => open('assistant')} style={{ width: 42, height: 42, borderRadius: '50%', border: 'none',
-          cursor: 'pointer', background: 'linear-gradient(150deg,#4CA8E4,#1B4794)', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', boxShadow: '0 6px 16px rgba(27,71,148,.3)' }}>
-          <Sparkle size={22} color="#fff" />
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {canUpload && (
+            <button onClick={onAddPhotos} disabled={uploading} aria-label="Add photos"
+              style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid #E5E7EB', cursor: uploading ? 'default' : 'pointer',
+                background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)', opacity: uploading ? .6 : 1 }}>
+              <Plus size={22} color="#1B4794" />
+            </button>
+          )}
+          <button onClick={() => open('assistant')} style={{ width: 42, height: 42, borderRadius: '50%', border: 'none',
+            cursor: 'pointer', background: 'linear-gradient(150deg,#4CA8E4,#1B4794)', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', boxShadow: '0 6px 16px rgba(27,71,148,.3)' }}>
+            <Sparkle size={22} color="#fff" />
+          </button>
+        </div>
       </div>
 
       {/* Search shortcut */}

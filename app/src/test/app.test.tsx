@@ -53,6 +53,16 @@ describe('Family Moments AI', () => {
     expect(screen.getByText(/^FM-\d{6}$/)).toBeInTheDocument();
   });
 
+  it('in demo mode shows no sign-in gate or upload affordance', () => {
+    renderApp();
+    // No auth backend configured → app is usable directly, no "Add photos".
+    expect(screen.getByText('248 new photos sorted')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Add photos')).not.toBeInTheDocument();
+    // Storage meter renders the (demo) quota.
+    fireEvent.click(screen.getByText('Family'));
+    expect(screen.getByText('4.8 / 5 GB')).toBeInTheDocument();
+  });
+
   it('unlocking premium removes the ad slot', async () => {
     renderApp();
     fireEvent.click(screen.getByText('Family'));

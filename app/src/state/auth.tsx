@@ -11,8 +11,12 @@ type AuthValue = {
   enabled: boolean;
   account: Account | null;
   signedIn: boolean;
+  /** True once signed in AND a family exists (false → needs onboarding). */
+  hasFamily: boolean;
   signIn: (email: string) => Promise<{ ok: boolean; error?: string }>;
   signOut: () => Promise<void>;
+  /** Re-read the account from the backend (e.g. after creating a family). */
+  refresh: () => Promise<void>;
 };
 
 const Ctx = createContext<AuthValue | null>(null);
@@ -39,8 +43,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     enabled: authEnabled,
     account,
     signedIn: !!account,
+    hasFamily: !!account?.familyId,
     signIn: signInWithEmail,
     signOut: async () => { await signOut(); setAccount(null); },
+    refresh: async () => { setAccount(await getCurrentAccount()); },
   }), [ready, account]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

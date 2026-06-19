@@ -67,10 +67,17 @@ Your steps to switch it on:
    `family-media` bucket with policies mirroring `my_family_ids()`.
 2. Put the URL + anon key in `app/.env`.
 
+Also done:
+- **Atomic family creation** via `create_family` RPC + a **CreateFamily**
+  onboarding screen (shown after first sign-in when the user has no family).
+- **Photo import + upload** (`services/photos.ts → importAndUpload`) wired to
+  Supabase Storage; surfaced as an "Add photos" action on the Timeline (only
+  when a backend is configured).
+- The Family **storage meter is live** (`getQuota`), unlimited under Premium.
+
 Remaining in this phase:
-- Edge function / RPC to atomically create a family + first `admin` membership.
-- Background photo-library upload, on-device thumbnailing, offline cache.
-- Wire the Family screen's storage meter to live `getQuota()`.
+- Background/queued photo-library upload, on-device thumbnailing, offline cache.
+- Family invites (membership management) + a real "Invite family member" flow.
 
 ### Phase 3 — The actual AI  (the product's core)
 - Real on-device + server AI: face clustering per child, date/EXIF grouping,

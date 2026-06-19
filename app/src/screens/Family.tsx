@@ -1,9 +1,20 @@
 /* Family tab — family circle, storage usage, premium upsell or active card. */
+import { useEffect, useState } from 'react';
 import { useApp } from '../state/store';
 import { MEMBERS } from '../data/content';
+import { getQuota, type Quota } from '../services/storage';
 
 export function Family() {
   const { state, open } = useApp();
+
+  // Live storage usage (demo fallback returns the design's 4.8 / 5 GB).
+  const [quota, setQuota] = useState<Quota>({ usedGb: 4.8, totalGb: 5 });
+  useEffect(() => { void getQuota(state.premium).then(setQuota); }, [state.premium]);
+  const unlimited = quota.totalGb === 'unlimited';
+  const totalGb = typeof quota.totalGb === 'number' ? quota.totalGb : 0;
+  const pct = unlimited ? 14 : Math.min(100, Math.round((quota.usedGb / (totalGb || 1)) * 100));
+  const nearFull = !unlimited && pct >= 90;
+  const storageLabel = unlimited ? `${quota.usedGb} GB · Unlimited` : `${quota.usedGb} / ${quota.totalGb} GB`;
 
   return (
     <div style={{ padding: '6px 18px 26px' }}>
@@ -31,12 +42,12 @@ export function Family() {
       <div style={{ background: '#fff', border: '1px solid #EDF0F4', borderRadius: 18, padding: 16, boxShadow: 'var(--shadow-sm)', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
           <div style={{ fontSize: 14.5, fontWeight: 700, color: '#15233F' }}>Storage</div>
-          <div style={{ fontSize: 12.5, color: '#8A93A6' }}>4.8 / 5 GB</div>
+          <div style={{ fontSize: 12.5, color: '#8A93A6' }}>{storageLabel}</div>
         </div>
         <div style={{ height: 8, borderRadius: 999, background: '#EEF1F6', overflow: 'hidden' }}>
-          <div style={{ width: '96%', height: '100%', background: 'linear-gradient(90deg,#FF7A59,#F2613F)' }} />
+          <div style={{ width: `${pct}%`, height: '100%', background: nearFull ? 'linear-gradient(90deg,#FF7A59,#F2613F)' : 'linear-gradient(90deg,#4CA8E4,#1B4794)' }} />
         </div>
-        <div style={{ fontSize: 12.5, color: '#F2613F', marginTop: 9, fontWeight: 600 }}>Almost full — upgrade for unlimited storage.</div>
+        {nearFull && <div style={{ fontSize: 12.5, color: '#F2613F', marginTop: 9, fontWeight: 600 }}>Almost full — upgrade for unlimited storage.</div>}
       </div>
 
       {!state.premium && (

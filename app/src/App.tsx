@@ -12,6 +12,7 @@ import { Search } from './screens/Search';
 import { Shop } from './screens/Shop';
 import { Family } from './screens/Family';
 import { SignIn } from './screens/SignIn';
+import { CreateFamily } from './screens/CreateFamily';
 import { Overlays } from './overlays/Overlays';
 
 function ActiveScreen() {
@@ -31,14 +32,20 @@ function ActiveScreen() {
 function AppShell({ framed }: { framed: boolean }) {
   const { state } = useApp();
   const auth = useAuth();
-  const gated = auth.ready && auth.enabled && !auth.signedIn;
+  // Gate sequence (only when an auth backend is configured):
+  //   not signed in → SignIn ; signed in without a family → CreateFamily.
+  const needsAuth = auth.ready && auth.enabled && !auth.signedIn;
+  const needsFamily = auth.ready && auth.enabled && auth.signedIn && !auth.hasFamily;
+  const gated = needsAuth || needsFamily;
   return (
     <div style={{ position: 'relative', width: '100%', height: framed ? '100%' : '100vh',
       background: '#F4F6FA', borderRadius: framed ? 38 : 0, overflow: 'hidden',
       display: 'flex', flexDirection: 'column' }}>
       <StatusBar platform={state.platform} />
-      {gated ? (
+      {needsAuth ? (
         <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}><SignIn /></div>
+      ) : needsFamily ? (
+        <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}><CreateFamily /></div>
       ) : (
         <>
           <div className="scr" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', position: 'relative' }}>

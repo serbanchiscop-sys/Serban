@@ -5,12 +5,12 @@
  * the app is fully usable offline and in tests. */
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
-export type Account = { id: string; name: string; household: string; email?: string };
+export type Account = { id: string; name: string; household: string; email?: string; familyId: string | null };
 
 /** Whether a real auth backend is wired up. False → demo mode. */
 export const authEnabled = isSupabaseConfigured;
 
-const DEMO: Account = { id: 'demo-sofia', name: 'Sofia', household: 'Sofia’s family' };
+const DEMO: Account = { id: 'demo-sofia', name: 'Sofia', household: 'Sofia’s family', familyId: 'demo-family' };
 
 /** Send a magic link / OTP to the given email. */
 export async function signInWithEmail(email: string): Promise<{ ok: boolean; error?: string }> {
@@ -50,21 +50,25 @@ export function onAuthChange(cb: (account: Account | null) => void): () => void 
   return () => data.subscription.unsubscribe();
 }
 
-/** Map an auth user to an Account, resolving their household name from the DB. */
+/** Map an auth user to an Account, resolving their family from the DB.
+ * `familyId` is null when the user hasn't created/joined a family yet. */
 async function mapAccount(id: string, email?: string): Promise<Account> {
   const name = email ? email.split('@')[0] : 'You';
   let household = 'My family';
+  let familyId: string | null = null;
   if (supabase) {
-    // Read the user's family via the membership join (see supabase/schema.sql).
     const { data } = await supabase
       .from('family_members')
-      .select('families(name)')
+      .select('family_id, families(name)')
       .eq('user_id', id)
       .limit(1)
       .maybeSingle();
-    const fam = data?.families as { name?: string } | { name?: string }[] | undefined;
-    const famName = Array.isArray(fam) ? fam[0]?.name : fam?.name;
-    if (famName) household = famName;
+    if (data?.family_id) {
+      familyId = data.family_id as string;
+      const fam = data.families as { name?: string } | { name?: string }[] | undefined;
+      const famName = Array.isArray(fam) ? fam[0]?.name : fam?.name;
+      if (famName) household = famName;
+    }
   }
-  return { id, name, household, email };
+  return { id, name, household, email, familyId };
 }
