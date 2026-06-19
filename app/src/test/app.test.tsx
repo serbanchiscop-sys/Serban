@@ -67,6 +67,8 @@ describe('Family Moments AI', () => {
     renderApp();
     fireEvent.click(screen.getByText('Family'));
     fireEvent.click(screen.getByText('Go Premium'));
+    // Apple requires a restore-purchases affordance on the paywall.
+    expect(screen.getByText('Restore purchases')).toBeInTheDocument();
     fireEvent.click(screen.getByText('Start 7-day free trial'));
     // Purchase is async (mock IAP); wait for the unlocked state.
     expect(await screen.findByText('Premium active')).toBeInTheDocument();

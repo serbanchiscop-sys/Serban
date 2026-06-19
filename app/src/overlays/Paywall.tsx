@@ -2,7 +2,7 @@
 import { useApp } from '../state/store';
 
 export function Paywall() {
-  const { state, close, setPlan, startTrial } = useApp();
+  const { state, close, setPlan, startTrial, restore } = useApp();
   const year = state.plan === 'year';
   // Prototype had a doubled "· cancel anytime" for the monthly note; trimmed here.
   const planNote = year ? 'Billed yearly · just €3.33 / month' : 'Billed monthly';
@@ -46,6 +46,9 @@ export function Paywall() {
         </div>
         <button onClick={startTrial} style={{ width: '100%', border: 'none', cursor: 'pointer', background: '#FF7A59', color: '#fff', fontFamily: 'inherit', fontWeight: 800, fontSize: 15.5, padding: 16, borderRadius: 14 }}>Start 7-day free trial</button>
         <div style={{ textAlign: 'center', fontSize: 11.5, color: '#9AA3AF', marginTop: 10 }}>{planNote} · cancel anytime</div>
+        <div style={{ textAlign: 'center', marginTop: 12 }}>
+          <button onClick={restore} style={{ border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 12.5, fontWeight: 600, color: '#6B7280' }}>Restore purchases</button>
+        </div>
       </div>
     </div>
   );

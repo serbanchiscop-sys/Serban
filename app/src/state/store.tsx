@@ -7,7 +7,7 @@ import type { Product } from '../data/content';
 import { detectPlatform, isNative, type Platform } from '../lib/platform';
 import { loadJSON, saveJSON } from '../services/persistence';
 import { askAssistant } from '../services/ai';
-import { purchaseSubscription, type Plan } from '../services/purchases';
+import { purchaseSubscription, restorePurchases, initBilling, type Plan } from '../services/purchases';
 
 export type Tab = 'timeline' | 'moments' | 'search' | 'shop' | 'family';
 export type Overlay =
@@ -140,6 +140,7 @@ type Store = {
   setChatInput: (v: string) => void;
   sendChat: () => void;
   startTrial: () => void;
+  restore: () => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -158,6 +159,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         loadJSON<CartItem[]>(PERSIST_KEYS.cart, []),
       ]);
       if (alive) dispatch({ type: 'hydrate', patch: { premium, cart } });
+      // On a configured native build, the store's entitlement is the source of
+      // truth for Premium — reconcile it over the persisted value.
+      const { premium: entitled } = await initBilling();
+      if (alive && entitled) dispatch({ type: 'setPremium', premium: true });
     })();
     return () => { alive = false; };
   }, []);
@@ -194,6 +199,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     startTrial: () => {
       void purchaseSubscription(state.plan).then((res) => {
         if (res.success) dispatch({ type: 'setPremium', premium: true });
+      });
+    },
+    restore: () => {
+      void restorePurchases().then((res) => {
+        if (res.premium) dispatch({ type: 'setPremium', premium: true });
       });
     },
   }), [state]);

@@ -118,10 +118,24 @@ Remaining in this phase (needs a native ML model + real photos):
   turning clips into an encoded MP4 is a media-pipeline task).
 
 ### Phase 4 — Monetisation
-- Subscriptions via **RevenueCat** (App Store + Play Billing) → replaces the
-  `purchases.ts` mock; wire the paywall to real entitlements.
-- Print-shop fulfilment via a print-on-demand API + a real card processor
-  (Stripe) for physical goods.
+**Subscriptions — done in code (RevenueCat, env-gated):**
+- `lib/revenuecat.ts` configures the RevenueCat Capacitor SDK from a **public**
+  SDK key (safe in the client); native-only and lazy-loaded.
+- `services/purchases.ts` drives real purchases / restore / entitlement checks,
+  with the mock fallback when unconfigured. The store reconciles the `premium`
+  entitlement on launch; the paywall has a **Restore purchases** button (Apple
+  requires one).
+
+Your steps to switch it on:
+1. Create the subscription products (`fm_premium_yearly` / `fm_premium_monthly`)
+   in App Store Connect + Play Console; add a `premium` entitlement in
+   RevenueCat mapping to them.
+2. Put the public SDK keys in `app/.env`
+   (`VITE_REVENUECAT_IOS_KEY` / `VITE_REVENUECAT_ANDROID_KEY`).
+
+**Still to do — print-shop (physical goods, separate path):**
+- Physical orders can't use IAP — wire a card processor (Stripe) + a
+  print-on-demand fulfilment API for the cart → checkout flow.
 
 ### Phase 5 — Submit
 - Generate signed builds, fill store listings, complete privacy/data-safety
