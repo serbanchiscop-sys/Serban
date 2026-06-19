@@ -83,6 +83,95 @@ async function search(query: string) {
   return { answer: query ? firstText(msg) : '', sub: 'Newest first' };
 }
 
+/** Call Claude with a JSON schema and return the parsed object. */
+async function structured<T>(system: string, schema: Record<string, unknown>, user: string, maxTokens = 1200): Promise<T> {
+  const msg = await anthropic.messages.create({
+    model: MODEL,
+    max_tokens: maxTokens,
+    system,
+    output_config: { format: { type: 'json_schema', schema } },
+    messages: [{ role: 'user', content: user }],
+  });
+  return JSON.parse(firstText(msg)) as T;
+}
+
+/** AI-written short story from a milestone's moments. */
+function story(title: string, who: string, captions: string[]) {
+  return structured(
+    APP_CONTEXT + ' Write a warm, short keepsake story (≈120 words) a parent would treasure.',
+    {
+      type: 'object',
+      properties: { title: { type: 'string' }, paragraphs: { type: 'array', items: { type: 'string' } } },
+      required: ['title', 'paragraphs'], additionalProperties: false,
+    },
+    `Milestone: "${title}" for ${who}. Moments: ${captions.join('; ') || '(no captions yet)'}.`,
+  );
+}
+
+/** A reel plan (scene order + music mood) from a month's moments. */
+function reel(month: string, captions: string[]) {
+  return structured(
+    APP_CONTEXT + ' Plan a short auto-generated highlight reel.',
+    {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        scenes: { type: 'array', items: { type: 'string' }, description: 'Ordered one-line scene descriptions.' },
+        musicMood: { type: 'string' },
+        durationSec: { type: 'integer' },
+      },
+      required: ['title', 'scenes', 'musicMood', 'durationSec'], additionalProperties: false,
+    },
+    `Month: ${month}. Moments: ${captions.join('; ') || '(no captions yet)'}.`,
+  );
+}
+
+/** A memory-book layout (page headings + captions) from a set of moments. */
+function book(title: string, captions: string[]) {
+  return structured(
+    APP_CONTEXT + ' Design an AI photo-book: a cover title and a heading + caption per page.',
+    {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        pages: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { heading: { type: 'string' }, caption: { type: 'string' } },
+            required: ['heading', 'caption'], additionalProperties: false,
+          },
+        },
+      },
+      required: ['title', 'pages'], additionalProperties: false,
+    },
+    `Book: "${title}". Moments: ${captions.join('; ') || '(no captions yet)'}.`,
+  );
+}
+
+/** Detect milestones from recent captioned/dated moments. */
+function milestones(items: { caption: string; date: string }[]) {
+  return structured(
+    APP_CONTEXT + ' From these moments, detect notable child milestones (first steps, ' +
+      'first tooth, first birthday, first day of school, holidays). Only include real signals.',
+    {
+      type: 'object',
+      properties: {
+        milestones: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { title: { type: 'string' }, who: { type: 'string' }, date: { type: 'string' } },
+            required: ['title', 'who', 'date'], additionalProperties: false,
+          },
+        },
+      },
+      required: ['milestones'], additionalProperties: false,
+    },
+    items.map((m) => `${m.date}: ${m.caption}`).join('\n') || '(no moments)',
+  );
+}
+
 async function caption(mediaType: string, dataBase64: string) {
   const msg = await anthropic.messages.create({
     model: MODEL,
@@ -123,6 +212,10 @@ Deno.serve(async (req: Request) => {
       case 'assistant': return json(await assistant(String(body.text ?? '')));
       case 'search': return json(await search(String(body.query ?? '')));
       case 'caption': return json(await caption(String(body.mediaType ?? 'image/jpeg'), String(body.dataBase64 ?? '')));
+      case 'story': return json(await story(String(body.title ?? ''), String(body.who ?? ''), body.captions ?? []));
+      case 'reel': return json(await reel(String(body.month ?? ''), body.captions ?? []));
+      case 'book': return json(await book(String(body.title ?? ''), body.captions ?? []));
+      case 'milestones': return json(await milestones(body.items ?? []));
       default: return json({ error: 'unknown action' }, 400);
     }
   } catch (e) {

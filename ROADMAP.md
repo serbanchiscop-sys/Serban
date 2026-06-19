@@ -98,16 +98,24 @@ Done in code (activates once you deploy the function + set the key):
 - **`services/ai.ts`** calls the function when a backend is configured, with the
   offline mock as fallback (so the app and tests still run with no key).
 - The **upload pipeline auto-captions** new photos (`media.caption` / `tags`).
+- **Generation + detection** (edge function actions `story` / `reel` / `book` /
+  `milestones`) → `generateStory` / `generateReel` / `generateBook` /
+  `detectMilestones` in `services/ai.ts`. The **AI story overlay** renders real
+  Claude text when a backend is configured (static demo otherwise).
+- **Per-child grouping / face-clustering** layer (`services/clustering.ts`):
+  groups media per child by `child_id` and AI name tags, with the real
+  face-embedding pipeline documented and stubbed behind the same API.
 
 Your steps to switch it on:
 1. `cd app && supabase functions deploy ai`
 2. `supabase secrets set ANTHROPIC_API_KEY=sk-ant-...` (get a key at
    console.anthropic.com — keep it **out** of `.env` and the app).
 
-Remaining in this phase (the deeper pipeline):
-- Per-child **face clustering** and date/EXIF grouping to power real, accurate
-  search and milestone detection over the whole library.
-- Real **reel / memory-book generation** from selected clips.
+Remaining in this phase (needs a native ML model + real photos):
+- On-device **face detection + embeddings** to replace the tag-based grouping in
+  `clustering.ts` (the grouping/match layer above is already in place).
+- Rendering generated **reels** into actual video (the reel *plan* is generated;
+  turning clips into an encoded MP4 is a media-pipeline task).
 
 ### Phase 4 — Monetisation
 - Subscriptions via **RevenueCat** (App Store + Play Billing) → replaces the

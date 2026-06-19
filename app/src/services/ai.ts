@@ -45,6 +45,50 @@ export async function captionPhoto(mediaType: string, dataBase64: string): Promi
   return invoke<{ caption: string; tags: string[] }>({ action: 'caption', mediaType, dataBase64 });
 }
 
+/* ---- Generation: stories, reels, memory books, milestone detection ---- */
+
+export type Story = { title: string; paragraphs: string[] };
+export type Reel = { title: string; scenes: string[]; musicMood: string; durationSec: number };
+export type Book = { title: string; pages: { heading: string; caption: string }[] };
+export type DetectedMilestone = { title: string; who: string; date: string };
+
+export async function generateStory(title: string, who: string, captions: string[] = []): Promise<Story> {
+  const live = await invoke<Story>({ action: 'story', title, who, captions });
+  return live ?? {
+    title: `${who}’s first steps`,
+    paragraphs: [
+      `On a bright March morning, ${who} pulled up, wobbled, and let go — three whole steps across the living room before a triumphant tumble into a cushion.`,
+      'There were giggles, a little surprise, and a lot of clapping. A tiny moment that felt enormous — the first of so many to come.',
+    ],
+  };
+}
+
+export async function generateReel(month: string, captions: string[] = []): Promise<Reel> {
+  const live = await invoke<Reel>({ action: 'reel', month, captions });
+  return live ?? { title: `A month in 48 seconds`, scenes: ['Morning cuddles', 'Park afternoon', 'Bath-time splashes', 'Bedtime stories'], musicMood: 'warm & upbeat', durationSec: 48 };
+}
+
+export async function generateBook(title: string, captions: string[] = []): Promise<Book> {
+  const live = await invoke<Book>({ action: 'book', title, captions });
+  return live ?? {
+    title,
+    pages: [
+      { heading: 'The big day', caption: 'Where it all began.' },
+      { heading: 'First smiles', caption: 'Those early, gummy grins.' },
+      { heading: 'On the move', caption: 'Crawling, then those first steps.' },
+    ],
+  };
+}
+
+export async function detectMilestones(items: { caption: string; date: string }[]): Promise<DetectedMilestone[]> {
+  const live = await invoke<{ milestones: DetectedMilestone[] }>({ action: 'milestones', items });
+  if (live) return live.milestones;
+  return [
+    { title: 'First steps', who: 'Mila', date: 'Mar 2026' },
+    { title: 'Lost first tooth', who: 'Roan', date: 'Feb 2026' },
+  ];
+}
+
 /* ---- Offline mock (mirrors the prototype's canned replies) ---- */
 function mockAssistant(text: string): AssistantReply {
   const q = (text || '').toLowerCase();
