@@ -34,6 +34,8 @@ create table if not exists media (
   storage_path  text not null,
   size_bytes    bigint not null default 0,
   taken_at      timestamptz,
+  caption       text,            -- AI-generated (see supabase/functions/ai, action 'caption')
+  tags          text[],          -- AI-generated tags
   created_at    timestamptz not null default now()
 );
 

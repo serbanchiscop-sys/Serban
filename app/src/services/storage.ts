@@ -38,3 +38,9 @@ export async function uploadMedia(
   if (error) return { ok: false, error: error.message };
   return { ok: true, path };
 }
+
+/** Attach an AI caption/tags to an uploaded item (best-effort, by path). */
+export async function setMediaCaption(path: string, caption: string, tags: string[]): Promise<void> {
+  if (!supabase) return;
+  await supabase.from('media').update({ caption, tags }).eq('storage_path', path);
+}

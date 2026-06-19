@@ -50,7 +50,7 @@ the app runs today and the UI never changes when the real implementation lands:
 
 | Service | Today (no env) | With backend / production |
 |---|---|---|
-| `services/ai.ts` | canned search/assistant replies | real memory pipeline (3) |
+| `services/ai.ts` | canned search/assistant replies | **Claude** via the `ai` edge function (3) ✅ |
 | `services/auth.ts` | demo household, no gate | **Supabase magic-link** when env set (2) ✅ |
 | `services/storage.ts` | static quota | **Supabase Storage** upload + quota (2) ✅ |
 | `services/purchases.ts` | flips local premium flag | RevenueCat IAP (4) |

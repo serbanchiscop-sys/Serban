@@ -87,10 +87,27 @@ What's left for you to switch it all on: create the Supabase project, run
 two env keys. Then the invite-accept entry point (a deep link carrying the
 code) can be wired to your chosen URL scheme.
 
-### Phase 3 — The actual AI  (the product's core)
-- Real on-device + server AI: face clustering per child, date/EXIF grouping,
-  milestone detection, natural-language search, reel & memory-book generation.
-- Replace `services/ai.ts` mock with the real pipeline.
+### Phase 3 — The actual AI  🚧 (in progress — Claude)
+Done in code (activates once you deploy the function + set the key):
+- **`supabase/functions/ai/`** — a Supabase Edge Function that runs **Claude
+  (`claude-opus-4-8`)** server-side. The Anthropic API key lives **only** here as
+  a secret — it never ships in the app and is never pasted in chat. Actions:
+  - `assistant` — the Family Chat reply + best follow-up (structured output).
+  - `search` — interprets a natural-language memory query.
+  - `caption` — **vision**: captions/tags an uploaded photo.
+- **`services/ai.ts`** calls the function when a backend is configured, with the
+  offline mock as fallback (so the app and tests still run with no key).
+- The **upload pipeline auto-captions** new photos (`media.caption` / `tags`).
+
+Your steps to switch it on:
+1. `cd app && supabase functions deploy ai`
+2. `supabase secrets set ANTHROPIC_API_KEY=sk-ant-...` (get a key at
+   console.anthropic.com — keep it **out** of `.env` and the app).
+
+Remaining in this phase (the deeper pipeline):
+- Per-child **face clustering** and date/EXIF grouping to power real, accurate
+  search and milestone detection over the whole library.
+- Real **reel / memory-book generation** from selected clips.
 
 ### Phase 4 — Monetisation
 - Subscriptions via **RevenueCat** (App Store + Play Billing) → replaces the

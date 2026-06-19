@@ -10,8 +10,9 @@
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { isNative } from '../lib/platform';
 import { G } from '../data/content';
-import { uploadMedia } from './storage';
+import { uploadMedia, setMediaCaption } from './storage';
 import { enqueue, type Uploader } from './uploadQueue';
+import { captionPhoto } from './ai';
 
 export type LocalPhoto = {
   id: string;
@@ -73,15 +74,39 @@ export async function pickAndQueueUpload(
   return { ok: true, queued: true };
 }
 
-/** The uploader the queue runs: fetch the file by URI and push it to storage. */
+/** The uploader the queue runs: fetch the file by URI, store it, then (best
+ * effort) ask the AI service to caption/tag it. */
 export const runUpload: Uploader = async (item) => {
   try {
     const blob = await (await fetch(item.srcUri)).blob();
-    return await uploadMedia(item.familyId, item.childId, blob, item.name);
+    const res = await uploadMedia(item.familyId, item.childId, blob, item.name);
+    if (res.ok && res.path) void captionInBackground(res.path, blob);
+    return res;
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : 'upload failed' };
   }
 };
+
+/** Caption a freshly-uploaded image via the AI service; failures are ignored. */
+async function captionInBackground(path: string, blob: Blob): Promise<void> {
+  try {
+    if (!blob.type.startsWith('image/') || blob.size > 4_000_000) return; // skip video / huge files
+    const b64 = await blobToBase64(blob);
+    const cap = await captionPhoto(blob.type, b64);
+    if (cap) await setMediaCaption(path, cap.caption, cap.tags);
+  } catch {
+    /* captioning is non-critical */
+  }
+}
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result).split(',')[1] ?? '');
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+}
 
 /** Downscale an image Blob to a small JPEG thumbnail (on-device, for fast grids). */
 export async function makeThumbnail(blob: Blob, max = 240): Promise<string | null> {

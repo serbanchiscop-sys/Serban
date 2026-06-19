@@ -1,12 +1,11 @@
-/* AI service interface — memory search, milestone detection, and generation.
+/* AI service — memory search, the Family Chat assistant, and photo captioning.
  *
- * Today this is a deterministic mock that reproduces the prototype's canned
- * responses, so the assistant and search work offline. Phase 3 replaces the
- * body of each function with calls to the real pipeline (face clustering,
- * natural-language search, reel/book/story generation) behind the SAME
- * signatures, so no UI changes are needed.
- *
- * Keep these functions async — the real implementations are network calls. */
+ * Phase 3: when a backend is configured these call the `ai` Supabase Edge
+ * Function, which runs Claude server-side (the Anthropic key never reaches the
+ * app). With no backend — tests, offline preview — they fall back to the
+ * deterministic mock so the UI is fully explorable. Signatures are unchanged,
+ * so no screen/overlay code changes when the backend is switched on. */
+import { supabase } from '../lib/supabase';
 import { G } from '../data/content';
 
 export type AssistantReply = {
@@ -17,8 +16,37 @@ export type AssistantReply = {
   actionKey: 'book' | 'reel' | 'shop' | 'search' | null;
 };
 
+async function invoke<T>(body: Record<string, unknown>): Promise<T | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase.functions.invoke('ai', { body });
+  if (error || !data || (data as { error?: string }).error) return null;
+  return data as T;
+}
+
 /** Natural-language reply for the Family Chat assistant. */
 export async function askAssistant(text: string): Promise<AssistantReply> {
+  const live = await invoke<AssistantReply>({ action: 'assistant', text });
+  return live ?? mockAssistant(text);
+}
+
+export type SearchResult = { id: string; bg: string };
+
+/** Natural-language photo search. */
+export async function searchMemories(query: string): Promise<{ answer: string; sub: string; results: SearchResult[] }> {
+  const idx = [0, 3, 8, 5, 1, 6, 9, 2, 10];
+  const results = idx.map((i, k) => ({ id: 'sr' + k, bg: G[i % G.length] }));
+  const live = await invoke<{ answer: string; sub: string }>({ action: 'search', query });
+  if (live) return { answer: live.answer, sub: live.sub, results };
+  return { answer: query ? `Found 23 moments for “${query}”` : '', sub: 'Roan · Oct 2025 — newest first', results };
+}
+
+/** Vision: caption + tag a photo (best-effort; used by the upload pipeline). */
+export async function captionPhoto(mediaType: string, dataBase64: string): Promise<{ caption: string; tags: string[] } | null> {
+  return invoke<{ caption: string; tags: string[] }>({ action: 'caption', mediaType, dataBase64 });
+}
+
+/* ---- Offline mock (mirrors the prototype's canned replies) ---- */
+function mockAssistant(text: string): AssistantReply {
   const q = (text || '').toLowerCase();
   if (q.includes('birthday'))
     return { text: 'Found 23 photos and 4 clips from Roan’s 1st birthday — 14 Oct 2025. Want me to make a memory book?', photoIdx: [0, 3, 8, 5], actionKey: 'book' };
@@ -29,16 +57,4 @@ export async function askAssistant(text: string): Promise<AssistantReply> {
   if (q.includes('print') || q.includes('canvas') || q.includes('book'))
     return { text: 'These would look beautiful as prints. Shall I open the Print Shop?', photoIdx: [3, 0], actionKey: 'shop' };
   return { text: 'I found 18 moments that match. Here’s a quick preview — open Search to see them all.', photoIdx: [2, 10, 5, 8], actionKey: 'search' };
-}
-
-export type SearchResult = { id: string; bg: string };
-
-/** Natural-language photo search. */
-export async function searchMemories(query: string): Promise<{ answer: string; sub: string; results: SearchResult[] }> {
-  const idx = [0, 3, 8, 5, 1, 6, 9, 2, 10];
-  return {
-    answer: query ? `Found 23 moments for “${query}”` : '',
-    sub: 'Roan · Oct 2025 — newest first',
-    results: idx.map((i, k) => ({ id: 'sr' + k, bg: G[i % G.length] })),
-  };
 }
