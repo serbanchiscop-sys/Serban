@@ -52,7 +52,7 @@ That is the bulk of the work and is phased below.
   - `services/purchases.ts` — subscriptions & print-shop payments.
 - Store assets: app icon, listing copy, privacy policy, publishing guide.
 
-### Phase 2 — Accounts & backend  🚧 (in progress — Supabase)
+### Phase 2 — Accounts & backend  ✅ (Supabase)
 Done in code (activates when you add Supabase env keys; offline demo otherwise):
 - **Supabase client** (`lib/supabase.ts`), env-gated via `.env` (see `.env.example`).
 - **Passwordless email magic-link auth** (`services/auth.ts`) + an auth context
@@ -75,9 +75,17 @@ Also done:
   when a backend is configured).
 - The Family **storage meter is live** (`getQuota`), unlimited under Premium.
 
-Remaining in this phase:
-- Background/queued photo-library upload, on-device thumbnailing, offline cache.
-- Family invites (membership management) + a real "Invite family member" flow.
+- **Family invites**: `invitations` table + `create_invite`/`accept_invite`
+  RPCs (RLS-guarded), a `profiles` table for member names, the Invite overlay
+  wired to "Invite family member", and a live family circle (`listMembers`).
+- **Background upload queue** (`services/uploadQueue.ts`): durable
+  (Preferences-backed), retrying, auto-flushes on reconnect; on-device
+  thumbnailing helper; a "Uploading N photos…" status on the Timeline.
+
+What's left for you to switch it all on: create the Supabase project, run
+`supabase/schema.sql`, add the `family-media` bucket + policies, and set the
+two env keys. Then the invite-accept entry point (a deep link carrying the
+code) can be wired to your chosen URL scheme.
 
 ### Phase 3 — The actual AI  (the product's core)
 - Real on-device + server AI: face clustering per child, date/EXIF grouping,

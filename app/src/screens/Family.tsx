@@ -1,11 +1,20 @@
 /* Family tab — family circle, storage usage, premium upsell or active card. */
 import { useEffect, useState } from 'react';
 import { useApp } from '../state/store';
-import { MEMBERS } from '../data/content';
+import { useAuth } from '../state/auth';
+import { MEMBERS, type Member } from '../data/content';
 import { getQuota, type Quota } from '../services/storage';
+import { listMembers } from '../services/family';
 
 export function Family() {
   const { state, open } = useApp();
+  const { account } = useAuth();
+
+  // Family circle — live members when a backend is configured, demo otherwise.
+  const [members, setMembers] = useState<Member[]>(MEMBERS);
+  useEffect(() => {
+    if (account?.familyId) void listMembers(account.familyId).then(setMembers);
+  }, [account?.familyId]);
 
   // Live storage usage (demo fallback returns the design's 4.8 / 5 GB).
   const [quota, setQuota] = useState<Quota>({ usedGb: 4.8, totalGb: 5 });
@@ -23,10 +32,10 @@ export function Family() {
       <div style={{ background: '#fff', border: '1px solid #EDF0F4', borderRadius: 18, padding: 16, boxShadow: 'var(--shadow-sm)', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
           <div style={{ fontSize: 15, fontWeight: 800, color: '#15233F' }}>Your family circle</div>
-          <span style={{ fontSize: 12.5, color: '#8A93A6' }}>4 members</span>
+          <span style={{ fontSize: 12.5, color: '#8A93A6' }}>{members.length} members</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
-          {MEMBERS.map((u) => (
+          {members.map((u) => (
             <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{ width: 42, height: 42, borderRadius: '50%', flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: 15, background: u.bg }}>{u.initials}</div>
               <div style={{ flex: 1 }}>
@@ -36,7 +45,7 @@ export function Family() {
             </div>
           ))}
         </div>
-        <button style={{ width: '100%', marginTop: 15, border: '1px solid #1B4794', background: '#fff', color: '#1B4794', fontFamily: 'inherit', fontWeight: 700, fontSize: 14, padding: 12, borderRadius: 12, cursor: 'pointer' }}>Invite family member</button>
+        <button onClick={() => open('invite')} style={{ width: '100%', marginTop: 15, border: '1px solid #1B4794', background: '#fff', color: '#1B4794', fontFamily: 'inherit', fontWeight: 700, fontSize: 14, padding: 12, borderRadius: 12, cursor: 'pointer' }}>Invite family member</button>
       </div>
 
       <div style={{ background: '#fff', border: '1px solid #EDF0F4', borderRadius: 18, padding: 16, boxShadow: 'var(--shadow-sm)', marginBottom: 16 }}>

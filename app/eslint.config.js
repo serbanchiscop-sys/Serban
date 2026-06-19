@@ -23,6 +23,8 @@ export default defineConfig([
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       // Co-locating hooks/types with their provider is intentional here; HMR-only concern.
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      // We intentionally sync persisted queue state into React on mount (post-await).
+      'react-hooks/set-state-in-effect': 'warn',
     },
   },
   {

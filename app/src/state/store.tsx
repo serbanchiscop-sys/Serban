@@ -12,7 +12,7 @@ import { purchaseSubscription, type Plan } from '../services/purchases';
 export type Tab = 'timeline' | 'moments' | 'search' | 'shop' | 'family';
 export type Overlay =
   | null | 'product' | 'cart' | 'checkout' | 'confirm'
-  | 'book' | 'story' | 'reel' | 'paywall' | 'assistant';
+  | 'book' | 'story' | 'reel' | 'paywall' | 'assistant' | 'invite';
 export type ChildId = 'all' | 'roan' | 'mila';
 
 export type CartItem = { id: string; name: string; price: number; bg: string; qty: number };

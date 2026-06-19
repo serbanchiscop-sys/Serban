@@ -10,6 +10,7 @@ import { Story } from './Story';
 import { Reel } from './Reel';
 import { Paywall } from './Paywall';
 import { Assistant } from './Assistant';
+import { Invite } from './Invite';
 
 export function Overlays() {
   const { state, close } = useApp();
@@ -28,6 +29,7 @@ export function Overlays() {
       {overlay === 'reel' && <Reel />}
       {overlay === 'paywall' && <Paywall />}
       {overlay === 'assistant' && <Assistant />}
+      {overlay === 'invite' && <Invite />}
     </div>
   );
 }

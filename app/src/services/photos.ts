@@ -11,6 +11,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { isNative } from '../lib/platform';
 import { G } from '../data/content';
 import { uploadMedia } from './storage';
+import { enqueue, type Uploader } from './uploadQueue';
 
 export type LocalPhoto = {
   id: string;
@@ -53,22 +54,48 @@ export async function pickFromLibrary(): Promise<LocalPhoto | null> {
 }
 
 /**
- * Pick a photo from the library and upload it to the family's storage.
- * Real on device with a backend; a no-op success in demo/web mode.
+ * Pick a photo and queue it for (background, retrying) upload. Returns whether
+ * something was enqueued. No-op success in demo/web mode (nothing real to send).
  */
-export async function importAndUpload(
+export async function pickAndQueueUpload(
   familyId: string,
   childId: string | null,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<{ ok: boolean; queued: boolean; error?: string }> {
   const picked = await pickFromLibrary();
-  if (!picked) return { ok: false, error: 'cancelled' };
-  if (picked.isGradient) return { ok: true }; // demo/web: nothing to upload
+  if (!picked) return { ok: false, queued: false, error: 'cancelled' };
+  if (picked.isGradient) return { ok: true, queued: false }; // demo/web: nothing to upload
+  await enqueue({
+    familyId,
+    childId,
+    name: picked.id.split('/').pop() || 'photo.jpg',
+    srcUri: picked.src,
+  });
+  return { ok: true, queued: true };
+}
+
+/** The uploader the queue runs: fetch the file by URI and push it to storage. */
+export const runUpload: Uploader = async (item) => {
   try {
-    const blob = await (await fetch(picked.src)).blob();
-    const filename = picked.id.split('/').pop() || 'photo.jpg';
-    return await uploadMedia(familyId, childId, blob, filename);
+    const blob = await (await fetch(item.srcUri)).blob();
+    return await uploadMedia(item.familyId, item.childId, blob, item.name);
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : 'upload failed' };
+  }
+};
+
+/** Downscale an image Blob to a small JPEG thumbnail (on-device, for fast grids). */
+export async function makeThumbnail(blob: Blob, max = 240): Promise<string | null> {
+  if (typeof createImageBitmap !== 'function' || typeof document === 'undefined') return null;
+  try {
+    const bmp = await createImageBitmap(blob);
+    const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d')?.drawImage(bmp, 0, 0, w, h);
+    return canvas.toDataURL('image/jpeg', 0.7);
+  } catch {
+    return null;
   }
 }
 
