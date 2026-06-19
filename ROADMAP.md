@@ -52,11 +52,25 @@ That is the bulk of the work and is phased below.
   - `services/purchases.ts` — subscriptions & print-shop payments.
 - Store assets: app icon, listing copy, privacy policy, publishing guide.
 
-### Phase 2 — Accounts & backend  (needs your services)
-- Stand up a backend (auth, family accounts, photo/video upload + storage).
-- Replace `services/auth.ts` and `services/storage.ts` mocks with real impls
-  (e.g. Supabase/Firebase + object storage + CDN).
-- Background upload, on-device thumbnailing, offline cache.
+### Phase 2 — Accounts & backend  🚧 (in progress — Supabase)
+Done in code (activates when you add Supabase env keys; offline demo otherwise):
+- **Supabase client** (`lib/supabase.ts`), env-gated via `.env` (see `.env.example`).
+- **Passwordless email magic-link auth** (`services/auth.ts`) + an auth context
+  and a brand **sign-in gate** (`screens/SignIn.tsx`).
+- **Database schema + row-level security** (`supabase/schema.sql`): families,
+  members, children, media — each scoped to the user's own family.
+- **Storage service** (`services/storage.ts`): real upload to a `family-media`
+  bucket + usage/quota, with demo fallback.
+
+Your steps to switch it on:
+1. Create a Supabase project; run `supabase/schema.sql`; create a private
+   `family-media` bucket with policies mirroring `my_family_ids()`.
+2. Put the URL + anon key in `app/.env`.
+
+Remaining in this phase:
+- Edge function / RPC to atomically create a family + first `admin` membership.
+- Background photo-library upload, on-device thumbnailing, offline cache.
+- Wire the Family screen's storage meter to live `getQuota()`.
 
 ### Phase 3 — The actual AI  (the product's core)
 - Real on-device + server AI: face clustering per child, date/EXIF grouping,

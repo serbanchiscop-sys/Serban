@@ -48,13 +48,19 @@ scripts/make-icons.mjs rasterize the brand icon for the stores
 Every external dependency is isolated behind a service with a working mock, so
 the app runs today and the UI never changes when the real implementation lands:
 
-| Service | Today (mock) | Production (phase) |
+| Service | Today (no env) | With backend / production |
 |---|---|---|
 | `services/ai.ts` | canned search/assistant replies | real memory pipeline (3) |
-| `services/auth.ts` | fixed demo household | Supabase/Firebase Auth (2) |
-| `services/storage.ts` | static quota | object storage + sync (2) |
+| `services/auth.ts` | demo household, no gate | **Supabase magic-link** when env set (2) ✅ |
+| `services/storage.ts` | static quota | **Supabase Storage** upload + quota (2) ✅ |
 | `services/purchases.ts` | flips local premium flag | RevenueCat IAP (4) |
 | `services/photos.ts` | **real** picker on device, gradients on web | full library scan (2) |
+
+### Enable the backend (Phase 2)
+Copy `.env.example` → `.env` and add your Supabase URL + anon key, then run
+`supabase/schema.sql` in the Supabase SQL editor and create a private
+`family-media` storage bucket. With env set, the app shows the email sign-in
+gate; without it, the app runs in offline demo mode (and the tests do too).
 
 ## Ship to the stores
 

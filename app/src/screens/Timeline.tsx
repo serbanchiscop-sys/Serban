@@ -1,5 +1,6 @@
 /* Timeline tab — AI feed grouped by child, milestone card, reel banner, grids. */
 import { useApp } from '../state/store';
+import { useAuth } from '../state/auth';
 import { CHILDREN, G } from '../data/content';
 import { Sparkle, SearchIcon, Play } from '../components/Icon';
 
@@ -7,6 +8,8 @@ const DEEP = '#1B4794';
 
 export function Timeline() {
   const { state, open, setChild } = useApp();
+  const { account } = useAuth();
+  const household = account?.household ?? 'Sofia’s family';
   const notPremium = !state.premium;
 
   return (
@@ -15,7 +18,7 @@ export function Timeline() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div>
           <div style={{ fontSize: 13, color: '#8A93A6', fontWeight: 600 }}>Good morning</div>
-          <div style={{ fontSize: 25, fontWeight: 800, color: '#15233F', letterSpacing: '-.03em', lineHeight: 1.1 }}>Sofia’s family</div>
+          <div style={{ fontSize: 25, fontWeight: 800, color: '#15233F', letterSpacing: '-.03em', lineHeight: 1.1 }}>{household}</div>
         </div>
         <button onClick={() => open('assistant')} style={{ width: 42, height: 42, borderRadius: '50%', border: 'none',
           cursor: 'pointer', background: 'linear-gradient(150deg,#4CA8E4,#1B4794)', display: 'flex', alignItems: 'center',

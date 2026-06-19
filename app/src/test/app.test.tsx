@@ -3,13 +3,16 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AppProvider } from '../state/store';
+import { AuthProvider } from '../state/auth';
 import App from '../App';
 
 function renderApp() {
   return render(
-    <AppProvider>
-      <App />
-    </AppProvider>,
+    <AuthProvider>
+      <AppProvider>
+        <App />
+      </AppProvider>
+    </AuthProvider>,
   );
 }
 
