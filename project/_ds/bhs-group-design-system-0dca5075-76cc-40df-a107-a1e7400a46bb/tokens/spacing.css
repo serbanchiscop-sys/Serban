@@ -1,0 +1,47 @@
+/* ============================================================
+   BHS GROUP — SPACING, RADII, SHADOWS, MOTION
+   ============================================================ */
+
+:root {
+  /* Spacing scale (4px base) */
+  --space-0: 0;
+  --space-1: 0.25rem;  /* 4 */
+  --space-2: 0.5rem;   /* 8 */
+  --space-3: 0.75rem;  /* 12 */
+  --space-4: 1rem;     /* 16 */
+  --space-5: 1.5rem;   /* 24 */
+  --space-6: 2rem;     /* 32 */
+  --space-7: 3rem;     /* 48 */
+  --space-8: 4rem;     /* 64 */
+  --space-9: 6rem;     /* 96 */
+
+  /* Radii — soft, app-icon-like (echoes the rounded BHS tile) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;     /* matches the logo tile corner */
+  --radius-pill: 999px;
+  --radius-tile: 22%;    /* for square icon tiles */
+
+  /* Shadows — clean, cool-tinted, never heavy */
+  --shadow-xs: 0 1px 2px rgba(16, 42, 92, 0.06);
+  --shadow-sm: 0 1px 3px rgba(16, 42, 92, 0.08), 0 1px 2px rgba(16, 42, 92, 0.04);
+  --shadow-md: 0 4px 12px rgba(16, 42, 92, 0.10);
+  --shadow-lg: 0 12px 32px rgba(16, 42, 92, 0.14);
+  --shadow-brand: 0 8px 24px rgba(27, 71, 148, 0.28);
+
+  /* Focus ring */
+  --ring-width: 3px;  /* @kind spacing */
+  --ring-offset: 2px; /* @kind spacing */
+
+  /* Motion — restrained, professional. Quick fades, soft ease. */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);     /* @kind other */
+  --dur-fast: 120ms;  /* @kind other */
+  --dur-base: 200ms;  /* @kind other */
+  --dur-slow: 320ms;  /* @kind other */
+
+  /* Layout */
+  --container-max: 1200px; /* @kind other */
+  --container-pad: var(--space-5); /* @kind spacing */
+}

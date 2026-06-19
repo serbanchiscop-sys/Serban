@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/bhs-group-design-system-0dca5075-76cc-40df-a107-a1e7400a46bb/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/bhs-group-design-system-0dca5075-76cc-40df-a107-a1e7400a46bb/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/bhs-group-design-system-0dca5075-76cc-40df-a107-a1e7400a46bb/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/bhs-group-design-system-0dca5075-76cc-40df-a107-a1e7400a46bb/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/bhs-group-design-system-0dca5075-76cc-40df-a107-a1e7400a46bb/styles.css">
+  <script src="_ds/bhs-group-design-system-0dca5075-76cc-40df-a107-a1e7400a46bb/_ds_bundle.js"></script>
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    .scr::-webkit-scrollbar{width:0;height:0;display:none;}
+    .scr{scrollbar-width:none;-ms-overflow-style:none;}
+    @keyframes fmSlide{from{transform:translateY(100%);}to{transform:translateY(0);}}
+    @keyframes fmFade{from{opacity:0;}to{opacity:1;}}
+    @keyframes fmPulse{0%,100%{opacity:.35;}50%{opacity:1;}}
+  </style>
+</helmet>
+
+<div style="min-height:100vh;width:100%;font-family:var(--font-sans);display:flex;flex-direction:column;align-items:center;padding:36px 16px 48px;background:radial-gradient(900px 620px at 78% -8%, #FFE7DC 0%, transparent 60%), radial-gradient(760px 520px at 8% 4%, #E5F0FB 0%, transparent 55%), #F3F5F9;">
+
+  <!-- Header -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:26px;text-align:center;">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(150deg,#4CA8E4,#1B4794);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(27,71,148,.28);">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5.5 6 5.5c2 0 3.2 1.2 4 2.3.8-1.1 2-2.3 4-2.3 3.5 0 5 3.5 3.5 6.5C19 16.5 12 21 12 21Z"/></svg>
+      </div>
+      <div style="text-align:left;">
+        <div style="font-size:17px;font-weight:800;color:#15233F;letter-spacing:-.02em;line-height:1;">Family Moments AI</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:3px;">The AI memory book for families</div>
+      </div>
+    </div>
+    <!-- platform toggle -->
+    <div style="display:inline-flex;padding:4px;background:#fff;border:1px solid #E5E7EB;border-radius:999px;box-shadow:var(--shadow-sm);">
+      <button onClick="{{ setIOS }}" style="border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;padding:7px 18px;border-radius:999px;background:{{ segIosBg }};color:{{ segIosColor }};">iOS</button>
+      <button onClick="{{ setAND }}" style="border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;padding:7px 18px;border-radius:999px;background:{{ segAndBg }};color:{{ segAndColor }};">Android</button>
+    </div>
+  </div>
+
+  <!-- PHONE -->
+  <div style="width:390px;height:842px;background:#0a0b0d;border-radius:48px;padding:11px;box-shadow:0 40px 90px -24px rgba(16,42,92,.55), 0 0 0 2px rgba(255,255,255,.04) inset;flex:none;">
+    <div style="position:relative;width:100%;height:100%;background:#F4F6FA;border-radius:38px;overflow:hidden;display:flex;flex-direction:column;">
+
+      <!-- ===== STATUS BAR ===== -->
+      <sc-if value="{{ isIOS }}" hint-placeholder-val="{{ true }}">
+        <div style="position:relative;height:50px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 9px;z-index:6;">
+          <div style="font-size:15px;font-weight:700;color:#15233F;letter-spacing:-.01em;">{{ statusTime }}</div>
+          <div style="position:absolute;top:11px;left:50%;transform:translateX(-50%);width:118px;height:32px;background:#0a0b0d;border-radius:18px;"></div>
+          <div style="display:flex;align-items:center;gap:6px;color:#15233F;">
+            <svg width="17" height="11" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.4c2.2 0 4.2.85 5.7 2.25l1.3-1.4C13.2 1.5 10.7.5 8 .5S2.8 1.5.99 3.25l1.3 1.4A8.2 8.2 0 0 1 8 2.4Z"/><path d="M8 6c1.2 0 2.3.46 3.1 1.2l1.3-1.4A6.2 6.2 0 0 0 8 4.1a6.2 6.2 0 0 0-4.4 1.7l1.3 1.4A4.5 4.5 0 0 1 8 6Z"/><circle cx="8" cy="9.6" r="1.7"/></svg>
+            <div style="display:flex;align-items:center;gap:2px;"><div style="width:22px;height:11px;border:1.5px solid #15233F;border-radius:3px;padding:1.5px;"><div style="width:78%;height:100%;background:#15233F;border-radius:1px;"></div></div><div style="width:1.5px;height:4px;background:#15233F;border-radius:1px;"></div></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}">
+        <div style="position:relative;height:42px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:6;">
+          <div style="font-size:14px;font-weight:600;color:#15233F;">{{ statusTime }}</div>
+          <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:9px;height:9px;background:#0a0b0d;border-radius:50%;"></div>
+          <div style="display:flex;align-items:center;gap:7px;color:#15233F;">
+            <svg width="15" height="11" viewBox="0 0 16 12" fill="currentColor"><path d="M8 1.5 14.5 9H1.5z" opacity=".25"/><path d="M8 1.5 14.5 9H8z"/></svg>
+            <svg width="15" height="11" viewBox="0 0 16 12" fill="currentColor"><path d="M8 3c2.4 0 4.6.95 6.2 2.5l-6.2 6L1.8 5.5A8.7 8.7 0 0 1 8 3Z"/></svg>
+            <svg width="20" height="11" viewBox="0 0 22 12" fill="none"><rect x="1" y="1" width="18" height="10" rx="2.5" stroke="currentColor" stroke-width="1.4"/><rect x="2.6" y="2.6" width="11" height="6.8" rx="1.2" fill="currentColor"/><rect x="20" y="4" width="1.6" height="4" rx="0.8" fill="currentColor"/></svg>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===== CONTENT (scroll) ===== -->
+      <div class="scr" style="flex:1;overflow-y:auto;overflow-x:hidden;position:relative;">
+
+        <!-- ============ TIMELINE ============ -->
+        <sc-if value="{{ tTimeline }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:6px 18px 26px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div>
+              <div style="font-size:13px;color:#8A93A6;font-weight:600;">Good morning</div>
+              <div style="font-size:25px;font-weight:800;color:#15233F;letter-spacing:-.03em;line-height:1.1;">Sofia&rsquo;s family</div>
+            </div>
+            <button onClick="{{ openAssistant }}" style="width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(150deg,#4CA8E4,#1B4794);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(27,71,148,.3);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6z"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>
+            </button>
+          </div>
+
+          <!-- search bar -->
+          <button onClick="{{ openAssistant }}" style="width:100%;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E9ECF2;border-radius:14px;padding:12px 14px;margin-bottom:18px;cursor:pointer;box-shadow:var(--shadow-xs);text-align:left;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA3AF" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <span style="font-size:14px;color:#9AA3AF;">Ask &ldquo;Show Roan&rsquo;s first birthday&rdquo;&hellip;</span>
+          </button>
+
+          <!-- AI status card -->
+          <div style="position:relative;background:linear-gradient(155deg,#1B4794,#0E2A5C);border-radius:20px;padding:18px;color:#fff;overflow:hidden;margin-bottom:16px;box-shadow:0 14px 30px -10px rgba(27,71,148,.5);">
+            <div style="position:absolute;width:160px;height:160px;border-radius:50%;right:-50px;top:-60px;background:radial-gradient(circle,rgba(76,168,228,.55),transparent 70%);"></div>
+            <div style="display:flex;align-items:center;gap:7px;position:relative;">
+              <span style="width:7px;height:7px;border-radius:50%;background:#7CFFB2;animation:fmPulse 1.6s infinite;"></span>
+              <span style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#9FD0F2;">AI is organizing</span>
+            </div>
+            <div style="font-size:19px;font-weight:800;margin-top:10px;letter-spacing:-.02em;position:relative;">248 new photos sorted</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.78);margin-top:4px;position:relative;line-height:1.5;">Grouped by child, dated, and 3 milestones detected this week.</div>
+          </div>
+
+          <!-- child chips -->
+          <div style="display:flex;gap:8px;margin-bottom:18px;">
+            <sc-for list="{{ chips }}" as="c" hint-placeholder-count="3">
+              <button onClick="{{ c.onClick }}" style="border:1px solid {{ c.chipBorder }};background:{{ c.chipBg }};color:{{ c.chipColor }};font-family:inherit;font-weight:700;font-size:13px;padding:7px 16px;border-radius:999px;cursor:pointer;transition:all .15s;">{{ c.label }}</button>
+            </sc-for>
+          </div>
+
+          <!-- milestone highlight -->
+          <div style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#FF7A59;margin-bottom:10px;">Milestone detected</div>
+          <div style="display:flex;gap:13px;background:#fff;border:1px solid #F0E2DC;border-radius:18px;padding:13px;margin-bottom:22px;box-shadow:var(--shadow-sm);align-items:center;">
+            <div style="width:74px;height:74px;border-radius:14px;background:linear-gradient(135deg,#FFD3A5,#FD6585);flex:none;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:16px;font-weight:800;color:#15233F;letter-spacing:-.01em;">Mila&rsquo;s first steps</div>
+              <div style="font-size:13px;color:#6B7280;margin-top:2px;">3 March 2026 &middot; 8 clips</div>
+              <div style="display:flex;gap:8px;margin-top:10px;">
+                <button onClick="{{ openStory }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;color:#fff;background:#FF7A59;padding:7px 13px;border-radius:999px;">Make a story</button>
+                <button style="border:1px solid #E5E7EB;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;color:#1B4794;background:#fff;padding:7px 13px;border-radius:999px;">Add to timeline</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- reel banner -->
+          <button onClick="{{ openReel }}" style="width:100%;position:relative;border:none;cursor:pointer;border-radius:18px;overflow:hidden;padding:0;margin-bottom:22px;text-align:left;display:block;box-shadow:var(--shadow-md);">
+            <div style="height:120px;background:linear-gradient(135deg,#FFD3A5,#FD6585);"></div>
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55));"></div>
+            <div style="position:absolute;left:16px;bottom:14px;color:#fff;">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.9;">Your April reel is ready</div>
+              <div style="font-size:18px;font-weight:800;letter-spacing:-.01em;">A month in 48 seconds</div>
+            </div>
+            <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1B4794"><path d="M8 5v14l11-7z"/></svg></div>
+          </button>
+
+          <!-- this week grid -->
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:11px;">
+            <div style="font-size:16px;font-weight:800;color:#15233F;letter-spacing:-.01em;">This week</div>
+            <div style="font-size:13px;color:#8A93A6;">Roan &amp; Mila</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">
+            <sc-for list="{{ chips }}" as="c2" hint-placeholder-count="0"></sc-for>
+            <div style="grid-column:span 2;grid-row:span 2;aspect-ratio:1;border-radius:14px;background:linear-gradient(135deg,#A1C4FD,#C2E9FB);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#FBC2A4,#F7797D);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#FFE29F,#FFA17F);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#E0C3FC,#8EC5FC);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#F6D365,#FDA085);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#84FAB0,#8FD3F4);"></div>
+          </div>
+
+          <!-- free-tier ad slot -->
+          <sc-if value="{{ notPremium }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;gap:12px;background:#F1F4F8;border:1px dashed #CBD5E1;border-radius:14px;padding:12px 14px;margin:18px 0 8px;">
+              <div style="font-size:10px;font-weight:700;color:#94A3B8;border:1px solid #CBD5E1;border-radius:5px;padding:2px 6px;letter-spacing:.06em;">AD</div>
+              <div style="flex:1;font-size:12.5px;color:#64748B;line-height:1.4;">Sponsored &middot; Tidy nursery, tidy mind &mdash; 20% off storage boxes.</div>
+              <button onClick="{{ openPaywall }}" style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:#1B4794;white-space:nowrap;">Remove ads</button>
+            </div>
+          </sc-if>
+
+          <!-- earlier section -->
+          <div style="font-size:16px;font-weight:800;color:#15233F;letter-spacing:-.01em;margin:18px 0 11px;">March 2026</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#FCCB90,#D57EEB);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#B5C6E0,#86A8E7);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#FFD3A5,#FD6585);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#C2FFD8,#465EFB);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#FAD0C4,#FFD1FF);"></div>
+            <div style="aspect-ratio:1;border-radius:11px;background:linear-gradient(135deg,#F5F7B2,#4ABDAC);"></div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ============ MOMENTS ============ -->
+        <sc-if value="{{ tMoments }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:6px 18px 26px;">
+          <div style="font-size:25px;font-weight:800;color:#15233F;letter-spacing:-.03em;margin-bottom:4px;">Moments</div>
+          <div style="font-size:13.5px;color:#6B7280;margin-bottom:20px;">Milestones, reels &amp; books &mdash; made for you.</div>
+
+          <div style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4CA8E4;margin-bottom:12px;">Milestones</div>
+          <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:26px;">
+            <sc-for list="{{ milestones }}" as="m" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:13px;background:#fff;border:1px solid #EDF0F4;border-radius:15px;padding:12px;box-shadow:var(--shadow-xs);">
+                <div style="width:46px;height:46px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center;background:{{ m.bg }};">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ m.path }}"/></svg>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:15px;font-weight:700;color:#15233F;">{{ m.title }}</div>
+                  <div style="font-size:12.5px;color:#8A93A6;margin-top:2px;">{{ m.who }} &middot; {{ m.date }}</div>
+                </div>
+                <x-import component-from-global-scope="BHSGroupDesignSystem_0dca50.Badge" tone="{{ m.toneTone }}" dot="{{ m.isNew }}" hint-size="auto,24px">{{ m.toneLabel }}</x-import>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4CA8E4;">Memory reels</div>
+            <span style="font-size:12.5px;color:#8A93A6;">Monthly &middot; auto</span>
+          </div>
+          <div class="scr" style="display:flex;gap:12px;overflow-x:auto;margin:0 -18px 26px;padding:0 18px 4px;">
+            <sc-for list="{{ reels }}" as="r" hint-placeholder-count="3">
+              <button onClick="{{ r.onPlay }}" style="flex:none;width:140px;border:none;cursor:pointer;background:none;padding:0;text-align:left;">
+                <div style="position:relative;height:184px;border-radius:16px;overflow:hidden;background:{{ r.bg }};box-shadow:var(--shadow-sm);">
+                  <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.5));"></div>
+                  <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="#1B4794"><path d="M8 5v14l11-7z"/></svg></div>
+                  <div style="position:absolute;left:10px;bottom:9px;color:#fff;"><div style="font-size:12.5px;font-weight:800;">{{ r.month }}</div><div style="font-size:11px;opacity:.85;">{{ r.dur }}</div></div>
+                </div>
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4CA8E4;margin-bottom:12px;">Memory books</div>
+          <div style="display:flex;gap:12px;margin-bottom:14px;">
+            <sc-for list="{{ books }}" as="b" hint-placeholder-count="2">
+              <div style="flex:1;background:#fff;border:1px solid #EDF0F4;border-radius:15px;padding:11px;box-shadow:var(--shadow-xs);">
+                <div style="height:96px;border-radius:10px;background:{{ b.bg }};margin-bottom:10px;box-shadow:inset -8px 0 14px -8px rgba(0,0,0,.25);"></div>
+                <div style="font-size:14px;font-weight:700;color:#15233F;">{{ b.title }}</div>
+                <div style="font-size:12px;color:#8A93A6;margin-top:2px;">{{ b.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <button onClick="{{ openBook }}" style="width:100%;border:1.5px dashed #B9CCE8;background:#F4F8FD;color:#1B4794;font-family:inherit;font-weight:700;font-size:14.5px;padding:15px;border-radius:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1B4794" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            Create a new memory book
+          </button>
+        </div>
+        </sc-if>
+
+        <!-- ============ SEARCH ============ -->
+        <sc-if value="{{ tSearch }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:6px 18px 26px;">
+          <div style="font-size:25px;font-weight:800;color:#15233F;letter-spacing:-.03em;margin-bottom:14px;">Search</div>
+          <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E9ECF2;border-radius:14px;padding:12px 14px;box-shadow:var(--shadow-xs);margin-bottom:16px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA3AF" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input value="{{ query }}" onChange="{{ onQuery }}" placeholder="Try a name, place or moment&hellip;" style="flex:1;border:none;outline:none;font-family:inherit;font-size:14.5px;color:#15233F;background:transparent;" />
+            <sc-if value="{{ searched }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearSearch }}" style="border:none;background:none;cursor:pointer;color:#9AA3AF;font-size:18px;line-height:1;">&times;</button></sc-if>
+          </div>
+
+          <sc-if value="{{ notSearched }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8A93A6;margin-bottom:11px;">Try asking</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <sc-for list="{{ searchChips }}" as="sc" hint-placeholder-count="5">
+                <button onClick="{{ sc.onClick }}" style="border:1px solid #E5E7EB;background:#fff;color:#374151;font-family:inherit;font-weight:600;font-size:13px;padding:8px 14px;border-radius:999px;cursor:pointer;box-shadow:var(--shadow-xs);">{{ sc.label }}</button>
+              </sc-for>
+            </div>
+            <div style="margin-top:26px;display:flex;align-items:center;gap:12px;background:linear-gradient(150deg,#1B4794,#0E2A5C);border-radius:16px;padding:15px;color:#fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9FD0F2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg>
+              <div style="flex:1;font-size:13px;line-height:1.5;color:rgba(255,255,255,.85);">Search understands natural language &mdash; faces, places, dates and feelings.</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ searched }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:16px;font-weight:800;color:#15233F;letter-spacing:-.01em;">{{ searchAnswer }}</div>
+            <div style="font-size:12.5px;color:#8A93A6;margin:3px 0 14px;">{{ searchSub }}</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:18px;">
+              <sc-for list="{{ searchResults }}" as="sr" hint-placeholder-count="9">
+                <div style="aspect-ratio:1;border-radius:11px;background:{{ sr.bg }};"></div>
+              </sc-for>
+            </div>
+            <button onClick="{{ openAssistant }}" style="width:100%;border:1px solid #E5E7EB;background:#fff;color:#1B4794;font-family:inherit;font-weight:700;font-size:14px;padding:13px;border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--shadow-xs);">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1B4794" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg>
+              Ask the assistant about these
+            </button>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- ============ SHOP ============ -->
+        <sc-if value="{{ tShop }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:6px 18px 26px;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
+            <div style="font-size:25px;font-weight:800;color:#15233F;letter-spacing:-.03em;">Print Shop</div>
+            <button onClick="{{ openCart }}" style="position:relative;width:42px;height:42px;border-radius:50%;border:1px solid #E5E7EB;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-xs);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B4794" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+              <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#FF7A59;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">{{ cartCountLabel }}</span></sc-if>
+            </button>
+          </div>
+          <div style="font-size:13.5px;color:#6B7280;margin-bottom:18px;">Turn your moments into keepsakes.</div>
+
+          <button onClick="{{ openBookProduct }}" style="width:100%;position:relative;border:none;cursor:pointer;border-radius:18px;overflow:hidden;padding:0;margin-bottom:20px;text-align:left;display:block;box-shadow:var(--shadow-md);">
+            <div style="height:140px;background:linear-gradient(135deg,#FFE29F,#FFA17F);"></div>
+            <div style="position:absolute;inset:0;background:linear-gradient(110deg,rgba(15,42,92,.72),rgba(15,42,92,.15));"></div>
+            <div style="position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#fff;">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.9;">Featured</div>
+              <div style="font-size:19px;font-weight:800;letter-spacing:-.01em;margin-top:3px;">Your April reel &rarr; a photo book</div>
+              <div style="font-size:13px;opacity:.9;margin-top:4px;">AI-designed &middot; from &euro;29.99</div>
+            </div>
+          </button>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <sc-for list="{{ productCards }}" as="p" hint-placeholder-count="6">
+              <div style="background:#fff;border:1px solid #EDF0F4;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-xs);display:flex;flex-direction:column;">
+                <button onClick="{{ p.onClick }}" style="border:none;padding:0;cursor:pointer;background:{{ p.bg }};height:108px;width:100%;"></button>
+                <div style="padding:11px 12px 12px;display:flex;flex-direction:column;flex:1;">
+                  <div style="font-size:13.5px;font-weight:700;color:#15233F;line-height:1.2;">{{ p.name }}</div>
+                  <div style="font-size:11.5px;color:#8A93A6;margin-top:3px;">{{ p.desc }}</div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:11px;">
+                    <div style="font-size:14px;font-weight:800;color:#1B4794;">{{ p.priceLabel }}</div>
+                    <button onClick="{{ p.onAdd }}" style="width:30px;height:30px;border-radius:9px;border:none;cursor:pointer;background:#FF7A59;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ============ FAMILY ============ -->
+        <sc-if value="{{ tFamily }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:6px 18px 26px;">
+          <div style="font-size:25px;font-weight:800;color:#15233F;letter-spacing:-.03em;margin-bottom:18px;">Family</div>
+
+          <div style="background:#fff;border:1px solid #EDF0F4;border-radius:18px;padding:16px;box-shadow:var(--shadow-sm);margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <div style="font-size:15px;font-weight:800;color:#15233F;">Your family circle</div>
+              <span style="font-size:12.5px;color:#8A93A6;">4 members</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:11px;">
+              <sc-for list="{{ members }}" as="u" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:42px;height:42px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:15px;background:{{ u.bg }};">{{ u.initials }}</div>
+                  <div style="flex:1;"><div style="font-size:14.5px;font-weight:700;color:#15233F;">{{ u.name }}</div><div style="font-size:12px;color:#8A93A6;">{{ u.role }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+            <button style="width:100%;margin-top:15px;border:1px solid #1B4794;background:#fff;color:#1B4794;font-family:inherit;font-weight:700;font-size:14px;padding:12px;border-radius:12px;cursor:pointer;">Invite family member</button>
+          </div>
+
+          <!-- storage -->
+          <div style="background:#fff;border:1px solid #EDF0F4;border-radius:18px;padding:16px;box-shadow:var(--shadow-sm);margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div style="font-size:14.5px;font-weight:700;color:#15233F;">Storage</div><div style="font-size:12.5px;color:#8A93A6;">4.8 / 5 GB</div></div>
+            <div style="height:8px;border-radius:999px;background:#EEF1F6;overflow:hidden;"><div style="width:96%;height:100%;background:linear-gradient(90deg,#FF7A59,#F2613F);"></div></div>
+            <div style="font-size:12.5px;color:#F2613F;margin-top:9px;font-weight:600;">Almost full &mdash; upgrade for unlimited storage.</div>
+          </div>
+
+          <!-- premium -->
+          <sc-if value="{{ notPremium }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ openPaywall }}" style="width:100%;position:relative;border:none;cursor:pointer;border-radius:18px;overflow:hidden;text-align:left;padding:18px;background:linear-gradient(140deg,#FF9A6B,#F2613F);color:#fff;box-shadow:0 14px 30px -12px rgba(242,97,63,.6);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.92;">Premium</div>
+              <div style="font-size:19px;font-weight:800;margin-top:6px;letter-spacing:-.01em;">Unlimited memories, no ads</div>
+              <div style="font-size:13px;opacity:.92;margin-top:4px;">From &euro;3.33 / month &middot; 7-day free trial</div>
+              <div style="display:inline-flex;align-items:center;gap:6px;margin-top:13px;background:rgba(255,255,255,.96);color:#F2613F;font-weight:800;font-size:13.5px;padding:9px 16px;border-radius:999px;">Go Premium <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F2613F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+            </button>
+          </sc-if>
+          <sc-if value="{{ premium }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:12px;border-radius:18px;padding:16px;background:linear-gradient(140deg,#1B4794,#0E2A5C);color:#fff;">
+              <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+              <div><div style="font-size:15px;font-weight:800;">Premium active</div><div style="font-size:12.5px;color:rgba(255,255,255,.78);">Unlimited storage &middot; no ads &middot; 4K reels</div></div>
+            </div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+      </div>
+
+      <!-- ===== BOTTOM NAV ===== -->
+      <div style="flex:none;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid #ECEFF3;padding:8px 8px 6px;display:flex;justify-content:space-around;z-index:5;">
+        <button onClick="{{ nav.timeline.go }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;color:{{ nav.timeline.color }};">
+          <span style="padding:3px 16px;border-radius:999px;background:{{ nav.timeline.pill }};display:flex;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+          <span style="font-size:10px;font-weight:700;">Timeline</span>
+        </button>
+        <button onClick="{{ nav.moments.go }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;color:{{ nav.moments.color }};">
+          <span style="padding:3px 16px;border-radius:999px;background:{{ nav.moments.pill }};display:flex;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.7 4.6L18.5 9l-4.8 1.4L12 15l-1.7-4.6L5.5 9l4.8-1.4z"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg></span>
+          <span style="font-size:10px;font-weight:700;">Moments</span>
+        </button>
+        <button onClick="{{ nav.search.go }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;color:{{ nav.search.color }};">
+          <span style="padding:3px 16px;border-radius:999px;background:{{ nav.search.pill }};display:flex;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+          <span style="font-size:10px;font-weight:700;">Search</span>
+        </button>
+        <button onClick="{{ nav.shop.go }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;color:{{ nav.shop.color }};">
+          <span style="padding:3px 16px;border-radius:999px;background:{{ nav.shop.pill }};display:flex;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></span>
+          <span style="font-size:10px;font-weight:700;">Shop</span>
+        </button>
+        <button onClick="{{ nav.family.go }}" style="border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;color:{{ nav.family.color }};">
+          <span style="padding:3px 16px;border-radius:999px;background:{{ nav.family.pill }};display:flex;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 6a3 3 0 0 1 0 6"/><path d="M20.5 20a5.5 5.5 0 0 0-4-5.3"/></svg></span>
+          <span style="font-size:10px;font-weight:700;">Family</span>
+        </button>
+      </div>
+
+      <!-- ===== HOME INDICATOR ===== -->
+      <sc-if value="{{ isIOS }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:none;height:22px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.92);"><div style="width:134px;height:5px;border-radius:3px;background:#15233F;opacity:.85;"></div></div>
+      </sc-if>
+      <sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:none;height:20px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.92);"><div style="width:108px;height:4px;border-radius:3px;background:#15233F;opacity:.7;"></div></div>
+      </sc-if>
+
+      <!-- ============ OVERLAYS ============ -->
+      <sc-if value="{{ ov.any }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:20;">
+          <div onClick="{{ closeOverlay }}" style="position:absolute;inset:0;background:rgba(13,22,42,.5);animation:fmFade .2s ease;"></div>
+
+          <!-- PRODUCT -->
+          <sc-if value="{{ ov.product }}" hint-placeholder-val="{{ false }}">
+            <div class="scr" style="position:absolute;left:0;right:0;bottom:0;max-height:90%;overflow-y:auto;background:#fff;border-radius:26px 26px 0 0;animation:fmSlide .3s cubic-bezier(.16,1,.3,1);">
+              <div style="position:sticky;top:0;display:flex;justify-content:center;padding:10px 0 4px;background:#fff;"><div style="width:38px;height:4px;border-radius:3px;background:#D7DCE5;"></div></div>
+              <div style="height:200px;margin:6px 18px 0;border-radius:18px;background:{{ prodBg }};"></div>
+              <div style="padding:18px;">
+                <div style="font-size:21px;font-weight:800;color:#15233F;letter-spacing:-.02em;">{{ prodName }}</div>
+                <div style="font-size:13.5px;color:#6B7280;margin-top:4px;">{{ prodDesc }}</div>
+                <div style="font-size:22px;font-weight:800;color:#1B4794;margin-top:12px;">{{ prodPriceLabel }}</div>
+                <div style="display:flex;align-items:center;gap:14px;margin-top:16px;">
+                  <span style="font-size:14px;font-weight:700;color:#374151;">Quantity</span>
+                  <div style="display:flex;align-items:center;gap:14px;border:1px solid #E5E7EB;border-radius:999px;padding:6px 14px;">
+                    <button onClick="{{ decP }}" style="border:none;background:none;cursor:pointer;font-size:20px;color:#1B4794;line-height:1;">&minus;</button>
+                    <span style="font-size:15px;font-weight:800;min-width:18px;text-align:center;">{{ pqtyLabel }}</span>
+                    <button onClick="{{ incP }}" style="border:none;background:none;cursor:pointer;font-size:20px;color:#1B4794;line-height:1;">+</button>
+                  </div>
+                </div>
+                <button onClick="{{ addCurrent }}" style="width:100%;margin-top:20px;border:none;cursor:pointer;background:#FF7A59;color:#fff;font-family:inherit;font-weight:800;font-size:15.5px;padding:15px;border-radius:14px;">Add to cart &middot; {{ prodTotalLabel }}</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- CART -->
+          <sc-if value="{{ ov.cart }}" hint-placeholder-val="{{ false }}">
+            <div class="scr" style="position:absolute;left:0;right:0;bottom:0;max-height:90%;overflow-y:auto;background:#fff;border-radius:26px 26px 0 0;animation:fmSlide .3s cubic-bezier(.16,1,.3,1);">
+              <div style="position:sticky;top:0;background:#fff;padding:16px 18px 12px;border-bottom:1px solid #F1F3F7;"><div style="display:flex;align-items:center;justify-content:space-between;"><div style="font-size:19px;font-weight:800;color:#15233F;">Your cart</div><button onClick="{{ closeOverlay }}" style="border:none;background:#F1F3F7;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:17px;color:#6B7280;">&times;</button></div></div>
+              <div style="padding:8px 18px 18px;">
+                <sc-if value="{{ hasCartItems }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:13px;margin:10px 0 4px;">
+                    <sc-for list="{{ cartItems }}" as="ci" hint-placeholder-count="2">
+                      <div style="display:flex;align-items:center;gap:12px;">
+                        <div style="width:58px;height:58px;border-radius:12px;flex:none;background:{{ ci.bg }};"></div>
+                        <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:700;color:#15233F;">{{ ci.name }}</div><div style="font-size:13px;color:#1B4794;font-weight:700;margin-top:2px;">{{ ci.lineLabel }}</div></div>
+                        <div style="display:flex;align-items:center;gap:11px;border:1px solid #E5E7EB;border-radius:999px;padding:5px 11px;">
+                          <button onClick="{{ ci.dec }}" style="border:none;background:none;cursor:pointer;font-size:17px;color:#1B4794;line-height:1;">&minus;</button>
+                          <span style="font-size:14px;font-weight:800;min-width:14px;text-align:center;">{{ ci.qtyLabel }}</span>
+                          <button onClick="{{ ci.inc }}" style="border:none;background:none;cursor:pointer;font-size:17px;color:#1B4794;line-height:1;">+</button>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="border-top:1px solid #F1F3F7;margin-top:16px;padding-top:14px;display:flex;flex-direction:column;gap:8px;">
+                    <div style="display:flex;justify-content:space-between;font-size:14px;color:#6B7280;"><span>Subtotal</span><span style="font-weight:700;color:#374151;">{{ subtotalLabel }}</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:14px;color:#6B7280;"><span>Shipping</span><span style="font-weight:700;color:#374151;">{{ shippingLabel }}</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:17px;font-weight:800;color:#15233F;margin-top:2px;"><span>Total</span><span>{{ totalLabel }}</span></div>
+                  </div>
+                  <button onClick="{{ openCheckout }}" style="width:100%;margin-top:18px;border:none;cursor:pointer;background:#1B4794;color:#fff;font-family:inherit;font-weight:800;font-size:15.5px;padding:15px;border-radius:14px;">Checkout</button>
+                </sc-if>
+                <sc-if value="{{ hasCartItems }}" hint-placeholder-val="{{ true }}"></sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- CHECKOUT -->
+          <sc-if value="{{ ov.checkout }}" hint-placeholder-val="{{ false }}">
+            <div class="scr" style="position:absolute;left:0;right:0;bottom:0;max-height:92%;overflow-y:auto;background:#fff;border-radius:26px 26px 0 0;animation:fmSlide .3s cubic-bezier(.16,1,.3,1);">
+              <div style="position:sticky;top:0;background:#fff;padding:16px 18px 12px;border-bottom:1px solid #F1F3F7;"><div style="display:flex;align-items:center;justify-content:space-between;"><div style="font-size:19px;font-weight:800;color:#15233F;">Checkout</div><button onClick="{{ closeOverlay }}" style="border:none;background:#F1F3F7;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:17px;color:#6B7280;">&times;</button></div></div>
+              <div style="padding:16px 18px 20px;display:flex;flex-direction:column;gap:14px;">
+                <x-import component-from-global-scope="BHSGroupDesignSystem_0dca50.Input" label="Full name" placeholder="Sofia de Vries" hint-size="100%,68px"></x-import>
+                <x-import component-from-global-scope="BHSGroupDesignSystem_0dca50.Input" label="Address" placeholder="Prinsengracht 263" hint-size="100%,68px"></x-import>
+                <div style="display:flex;gap:12px;">
+                  <div style="flex:1;"><x-import component-from-global-scope="BHSGroupDesignSystem_0dca50.Input" label="Postcode" placeholder="1016 GV" hint-size="100%,68px"></x-import></div>
+                  <div style="flex:1.4;"><x-import component-from-global-scope="BHSGroupDesignSystem_0dca50.Input" label="City" placeholder="Amsterdam" hint-size="100%,68px"></x-import></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;border:1px solid #E5E7EB;border-radius:12px;padding:13px 14px;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B4794" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                  <div style="flex:1;"><div style="font-size:13.5px;font-weight:700;color:#15233F;">Visa &middot;&middot;&middot;&middot; 4242</div><div style="font-size:12px;color:#8A93A6;">Expires 09/28</div></div>
+                  <span style="font-size:12.5px;font-weight:700;color:#1B4794;">Change</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:17px;font-weight:800;color:#15233F;border-top:1px solid #F1F3F7;padding-top:14px;"><span>Total</span><span>{{ totalLabel }}</span></div>
+                <button onClick="{{ placeOrder }}" style="width:100%;border:none;cursor:pointer;background:#FF7A59;color:#fff;font-family:inherit;font-weight:800;font-size:15.5px;padding:15px;border-radius:14px;">Place order &middot; {{ totalLabel }}</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- CONFIRM -->
+          <sc-if value="{{ ov.confirm }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;animation:fmSlide .3s cubic-bezier(.16,1,.3,1);padding:34px 22px 26px;text-align:center;">
+              <div style="width:72px;height:72px;border-radius:50%;margin:0 auto 18px;background:linear-gradient(140deg,#7CFFB2,#1F8A5B);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px -8px rgba(31,138,91,.5);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+              <div style="font-size:22px;font-weight:800;color:#15233F;letter-spacing:-.02em;">Order confirmed</div>
+              <div style="font-size:14px;color:#6B7280;margin-top:6px;line-height:1.55;">Your prints are off to the lab. They&rsquo;ll arrive in 3&ndash;5 days.</div>
+              <div style="background:#F4F6FA;border-radius:12px;padding:12px;margin-top:18px;font-size:13px;color:#374151;">Order <strong style="color:#1B4794;">{{ orderNo }}</strong></div>
+              <button onClick="{{ backToShop }}" style="width:100%;margin-top:18px;border:none;cursor:pointer;background:#1B4794;color:#fff;font-family:inherit;font-weight:800;font-size:15px;padding:14px;border-radius:14px;">Back to shop</button>
+            </div>
+          </sc-if>
+
+          <!-- MEMORY BOOK -->
+          <sc-if value="{{ ov.book }}" hint-placeholder-val="{{ false }}">
+            <div class="scr" style="position:absolute;left:0;right:0;bottom:0;max-height:90%;overflow-y:auto;background:#fff;border-radius:26px 26px 0 0;animation:fmSlide .3s cubic-bezier(.16,1,.3,1);">
+              <div style="position:sticky;top:0;background:#fff;padding:16px 18px 12px;"><div style="display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4CA8E4;">AI memory book</div><div style="font-size:19px;font-weight:800;color:#15233F;margin-top:3px;">Roan &mdash; Year One</div></div><button onClick="{{ closeOverlay }}" style="border:none;background:#F1F3F7;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:17px;color:#6B7280;">&times;</button></div></div>
+              <div style="padding:4px 18px 20px;">
+                <div style="display:flex;align-items:center;gap:8px;background:#EEF6FF;border-radius:12px;padding:11px 13px;margin-bottom:16px;"><span style="width:7px;height:7px;border-radius:50%;background:#4CA8E4;animation:fmPulse 1.6s infinite;"></span><span style="font-size:12.5px;color:#1B4794;font-weight:600;">AI selected 96 best photos &amp; wrote the captions.</span></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;">
+                  <div style="aspect-ratio:.74;border-radius:12px;background:linear-gradient(135deg,#FFD3A5,#FD6585);box-shadow:inset -8px 0 14px -8px rgba(0,0,0,.25);"></div>
+                  <div style="aspect-ratio:.74;border-radius:12px;background:linear-gradient(135deg,#A1C4FD,#C2E9FB);box-shadow:inset -8px 0 14px -8px rgba(0,0,0,.25);"></div>
+                  <div style="aspect-ratio:.74;border-radius:12px;background:linear-gradient(135deg,#FAD0C4,#FFD1FF);box-shadow:inset -8px 0 14px -8px rgba(0,0,0,.25);"></div>
+                  <div style="aspect-ratio:.74;border-radius:12px;background:linear-gradient(135deg,#F6D365,#FDA085);box-shadow:inset -8px 0 14px -8px rgba(0,0,0,.25);"></div>
+                </div>
+                <sc-if value="{{ notPremium }}" hint-placeholder-val="{{ true }}"><div style="font-size:12px;color:#8A93A6;margin-top:12px;text-align:center;">Free export includes a small watermark. Premium removes it.</div></sc-if>
+                <button onClick="{{ openBookProduct }}" style="width:100%;margin-top:16px;border:none;cursor:pointer;background:#FF7A59;color:#fff;font-family:inherit;font-weight:800;font-size:15px;padding:15px;border-radius:14px;">Order printed book &middot; &euro;29.99</button>
+                <button onClick="{{ closeOverlay }}" style="width:100%;margin-top:10px;border:1px solid #E5E7EB;cursor:pointer;background:#fff;color:#1B4794;font-family:inherit;font-weight:700;font-size:14.5px;padding:13px;border-radius:14px;">Save digital version</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- STORY -->
+          <sc-if value="{{ ov.story }}" hint-placeholder-val="{{ false }}">
+            <div class="scr" style="position:absolute;left:0;right:0;bottom:0;max-height:90%;overflow-y:auto;background:#fff;border-radius:26px 26px 0 0;animation:fmSlide .3s cubic-bezier(.16,1,.3,1);">
+              <div style="position:sticky;top:0;background:#fff;padding:16px 18px 12px;"><div style="display:flex;align-items:center;justify-content:space-between;"><div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4CA8E4;">AI story</div><button onClick="{{ closeOverlay }}" style="border:none;background:#F1F3F7;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:17px;color:#6B7280;">&times;</button></div></div>
+              <div style="padding:4px 18px 22px;">
+                <div style="height:170px;border-radius:16px;background:linear-gradient(135deg,#FFD3A5,#FD6585);margin-bottom:16px;"></div>
+                <div style="font-size:21px;font-weight:800;color:#15233F;letter-spacing:-.02em;">The day Mila walked</div>
+                <div style="font-size:12.5px;color:#8A93A6;margin:4px 0 14px;">Generated from 8 photos &middot; 3 March 2026</div>
+                <p style="font-size:15px;line-height:1.7;color:#374151;margin:0 0 12px;">It was a grey Tuesday afternoon when Mila let go of the sofa. One wobbly step, then two &mdash; arms out like a tiny tightrope walker, eyes fixed on Roan&rsquo;s outstretched hands.</p>
+                <p style="font-size:15px;line-height:1.7;color:#374151;margin:0;">By the third step the whole room was cheering. She sat down with a triumphant thud and looked up, as if to say: <em>did you all see that?</em> We did, Mila. We always will.</p>
+                <button onClick="{{ openBook }}" style="width:100%;margin-top:20px;border:none;cursor:pointer;background:#1B4794;color:#fff;font-family:inherit;font-weight:800;font-size:15px;padding:14px;border-radius:14px;">Add to memory book</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- REEL -->
+          <sc-if value="{{ ov.reel }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:#08080A;animation:fmFade .25s ease;display:flex;flex-direction:column;">
+              <div style="position:absolute;inset:0;background:linear-gradient(160deg,#FFD3A5,#FD6585);opacity:.92;"></div>
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),transparent 30%,transparent 60%,rgba(0,0,0,.6));"></div>
+              <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:18px;">
+                <div style="color:#fff;"><div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.9;">Memory reel</div><div style="font-size:17px;font-weight:800;">April 2026</div></div>
+                <button onClick="{{ closeOverlay }}" style="border:none;background:rgba(255,255,255,.22);width:34px;height:34px;border-radius:50%;cursor:pointer;color:#fff;font-size:19px;">&times;</button>
+              </div>
+              <div style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;">
+                <div style="width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.3);"><svg width="28" height="28" viewBox="0 0 24 24" fill="#1B4794"><path d="M8 5v14l11-7z"/></svg></div>
+                <sc-if value="{{ notPremium }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:14px;right:18px;background:rgba(0,0,0,.4);color:rgba(255,255,255,.85);font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;">Family Moments</div></sc-if>
+              </div>
+              <div style="position:relative;padding:0 18px 26px;">
+                <div style="height:4px;border-radius:3px;background:rgba(255,255,255,.3);margin-bottom:8px;"><div style="width:36%;height:100%;border-radius:3px;background:#fff;"></div></div>
+                <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,.85);font-size:12px;font-weight:600;margin-bottom:16px;"><span>0:17</span><span>0:48</span></div>
+                <button onClick="{{ openBookProduct }}" style="width:100%;border:none;cursor:pointer;background:rgba(255,255,255,.95);color:#15233F;font-family:inherit;font-weight:800;font-size:14.5px;padding:14px;border-radius:14px;">Turn this reel into a photo book</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- PAYWALL -->
+          <sc-if value="{{ ov.paywall }}" hint-placeholder-val="{{ false }}">
+            <div class="scr" style="position:absolute;left:0;right:0;bottom:0;max-height:94%;overflow-y:auto;background:#fff;border-radius:26px 26px 0 0;animation:fmSlide .3s cubic-bezier(.16,1,.3,1);">
+              <div style="position:relative;padding:26px 22px 18px;background:linear-gradient(150deg,#1B4794,#0E2A5C);border-radius:26px 26px 0 0;color:#fff;overflow:hidden;">
+                <div style="position:absolute;width:200px;height:200px;border-radius:50%;right:-60px;top:-80px;background:radial-gradient(circle,rgba(76,168,228,.5),transparent 70%);"></div>
+                <button onClick="{{ closeOverlay }}" style="position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,.18);width:30px;height:30px;border-radius:50%;cursor:pointer;color:#fff;font-size:17px;z-index:2;">&times;</button>
+                <div style="position:relative;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#9FD0F2;">Family Moments Premium</div>
+                <div style="position:relative;font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:8px;line-height:1.15;">Every memory, kept forever.</div>
+              </div>
+              <div style="padding:18px;">
+                <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:18px;">
+                  <div style="display:flex;align-items:center;gap:11px;"><span style="width:22px;height:22px;border-radius:50%;background:#EAF4FF;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B4794" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span style="font-size:14px;color:#374151;">Unlimited photo &amp; video storage</span></div>
+                  <div style="display:flex;align-items:center;gap:11px;"><span style="width:22px;height:22px;border-radius:50%;background:#EAF4FF;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B4794" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span style="font-size:14px;color:#374151;">No ads, no watermarks &middot; 4K reels</span></div>
+                  <div style="display:flex;align-items:center;gap:11px;"><span style="width:22px;height:22px;border-radius:50%;background:#EAF4FF;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B4794" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span style="font-size:14px;color:#374151;">Unlimited memory books &amp; stories</span></div>
+                  <div style="display:flex;align-items:center;gap:11px;"><span style="width:22px;height:22px;border-radius:50%;background:#EAF4FF;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B4794" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span><span style="font-size:14px;color:#374151;">15% off all prints &amp; gifts</span></div>
+                </div>
+                <div style="display:flex;gap:11px;margin-bottom:16px;">
+                  <button onClick="{{ setYear }}" style="flex:1;border:2px solid {{ yearBorder }};background:{{ yearBg }};border-radius:15px;padding:14px 12px;cursor:pointer;text-align:left;position:relative;">
+                    <div style="position:absolute;top:-9px;left:12px;background:#FF7A59;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;letter-spacing:.04em;">SAVE 33%</div>
+                    <div style="font-size:13px;font-weight:700;color:#374151;">Yearly</div>
+                    <div style="font-size:20px;font-weight:800;color:#15233F;margin-top:3px;">&euro;39.99</div>
+                    <div style="font-size:11.5px;color:#8A93A6;">&euro;3.33 / mo</div>
+                  </button>
+                  <button onClick="{{ setMonth }}" style="flex:1;border:2px solid {{ monthBorder }};background:{{ monthBg }};border-radius:15px;padding:14px 12px;cursor:pointer;text-align:left;">
+                    <div style="font-size:13px;font-weight:700;color:#374151;">Monthly</div>
+                    <div style="font-size:20px;font-weight:800;color:#15233F;margin-top:3px;">&euro;4.99</div>
+                    <div style="font-size:11.5px;color:#8A93A6;">billed monthly</div>
+                  </button>
+                </div>
+                <button onClick="{{ startTrial }}" style="width:100%;border:none;cursor:pointer;background:#FF7A59;color:#fff;font-family:inherit;font-weight:800;font-size:15.5px;padding:16px;border-radius:14px;">Start 7-day free trial</button>
+                <div style="text-align:center;font-size:11.5px;color:#9AA3AF;margin-top:10px;">{{ planNote }} &middot; cancel anytime</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ASSISTANT (Family Chat) -->
+          <sc-if value="{{ ov.assistant }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:0;right:0;bottom:0;top:0;background:#F4F6FA;animation:fmSlide .3s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;">
+              <div style="flex:none;background:#fff;border-bottom:1px solid #ECEFF3;padding:14px 16px;display:flex;align-items:center;gap:11px;">
+                <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(150deg,#4CA8E4,#1B4794);display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9z"/></svg></div>
+                <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:#15233F;">Family assistant</div><div style="font-size:11.5px;color:#1F8A5B;font-weight:600;">Online</div></div>
+                <button onClick="{{ closeOverlay }}" style="border:none;background:#F1F3F7;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:17px;color:#6B7280;">&times;</button>
+              </div>
+              <div class="scr" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
+                <sc-for list="{{ chatMsgs }}" as="cm" hint-placeholder-count="1">
+                  <div style="display:flex;justify-content:{{ cm.rowJustify }};">
+                    <div style="max-width:80%;background:{{ cm.bubbleBg }};color:{{ cm.bubbleColor }};border:1px solid {{ cm.bubbleBorder }};border-radius:18px;padding:11px 14px;font-size:14px;line-height:1.5;box-shadow:var(--shadow-xs);">
+                      <div>{{ cm.text }}</div>
+                      <sc-if value="{{ cm.hasPhotos }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;gap:6px;margin-top:9px;">
+                          <sc-for list="{{ cm.photos }}" as="cp" hint-placeholder-count="3"><div style="width:52px;height:52px;border-radius:9px;background:{{ cp.bg }};flex:none;"></div></sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ cm.hasAction }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ cm.action }}" style="margin-top:10px;border:none;cursor:pointer;background:#FF7A59;color:#fff;font-family:inherit;font-weight:700;font-size:12.5px;padding:8px 13px;border-radius:999px;">{{ cm.actionLabel }}</button>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="flex:none;padding:10px 14px 8px;background:#F4F6FA;">
+                <div class="scr" style="display:flex;gap:7px;overflow-x:auto;margin-bottom:9px;padding-bottom:2px;">
+                  <sc-for list="{{ searchChips }}" as="qc" hint-placeholder-count="3"><button onClick="{{ qc.onClick }}" style="flex:none;border:1px solid #E5E7EB;background:#fff;color:#374151;font-family:inherit;font-weight:600;font-size:12.5px;padding:7px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;">{{ qc.label }}</button></sc-for>
+                </div>
+              </div>
+              <div style="flex:none;background:#fff;border-top:1px solid #ECEFF3;padding:11px 14px 14px;display:flex;align-items:center;gap:9px;">
+                <input value="{{ chatInput }}" onChange="{{ onChatInput }}" placeholder="Ask about a moment&hellip;" style="flex:1;border:1px solid #E5E7EB;border-radius:999px;padding:11px 16px;font-family:inherit;font-size:14px;outline:none;color:#15233F;" />
+                <button onClick="{{ sendChat }}" style="width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:#1B4794;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+              </div>
+            </div>
+          </sc-if>
+
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+
+  <div style="margin-top:22px;font-size:12.5px;color:#9AA3AF;text-align:center;max-width:340px;line-height:1.5;">Interactive prototype &middot; tap around. Switch iOS / Android above &mdash; the same app, native chrome.</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;430&quot;,&quot;height&quot;:&quot;980&quot;},&quot;platform&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ios&quot;,&quot;android&quot;],&quot;default&quot;:&quot;ios&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#FF7A59&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;premiumDefault&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.G = [
+      'linear-gradient(135deg,#FBC2A4,#F7797D)',
+      'linear-gradient(135deg,#A1C4FD,#C2E9FB)',
+      'linear-gradient(135deg,#FAD0C4,#FFD1FF)',
+      'linear-gradient(135deg,#FFE29F,#FFA17F)',
+      'linear-gradient(135deg,#B5C6E0,#86A8E7)',
+      'linear-gradient(135deg,#F6D365,#FDA085)',
+      'linear-gradient(135deg,#84FAB0,#8FD3F4)',
+      'linear-gradient(135deg,#E0C3FC,#8EC5FC)',
+      'linear-gradient(135deg,#FFD3A5,#FD6585)',
+      'linear-gradient(135deg,#C2FFD8,#465EFB)',
+      'linear-gradient(135deg,#FCCB90,#D57EEB)',
+      'linear-gradient(135deg,#F5F7B2,#4ABDAC)',
+    ];
+    this.state = {
+      platform: props.platform || 'ios',
+      tab: 'timeline',
+      child: 'all',
+      overlay: null,
+      plan: 'year',
+      product: null,
+      pqty: 1,
+      cart: [],
+      query: '',
+      searched: false,
+      orderNo: '',
+      premium: !!props.premiumDefault,
+      chat: [{ role: 'ai', text: "Hi Sofia. I'm your family memory assistant. Ask me anything \u2014 a moment, a child, a date \u2014 and I'll find it." }],
+      chatInput: '',
+    };
+  }
+
+  eur(n) { return '\u20AC' + n.toFixed(2); }
+  go(t) { this.setState({ tab: t, overlay: null }); }
+  open(o) { this.setState({ overlay: o }); }
+  close() { this.setState({ overlay: null }); }
+  setChild(c) { this.setState({ child: c }); }
+  setPlat(p) { this.setState({ platform: p }); }
+  setPlan(p) { this.setState({ plan: p }); }
+  goPremium() { this.setState({ premium: true, overlay: null }); }
+
+  openProduct(p) { this.setState({ product: p, pqty: 1, overlay: 'product' }); }
+  setPqty(d) { this.setState(s => ({ pqty: Math.max(1, s.pqty + d) })); }
+
+  addToCart(p, qty) {
+    const cart = this.state.cart.map(x => ({ ...x }));
+    const i = cart.findIndex(x => x.id === p.id);
+    if (i >= 0) cart[i].qty += qty; else cart.push({ id: p.id, name: p.name, price: p.price, bg: p.bg, qty });
+    this.setState({ cart, overlay: 'cart' });
+  }
+  cartInc(id, d) {
+    let cart = this.state.cart.map(x => ({ ...x }));
+    const i = cart.findIndex(x => x.id === id);
+    if (i < 0) return;
+    cart[i].qty += d;
+    if (cart[i].qty <= 0) cart = cart.filter(x => x.id !== id);
+    this.setState({ cart });
+  }
+  placeOrder() {
+    this.setState({ orderNo: 'FM-' + Math.floor(100000 + Math.random() * 899999), cart: [], overlay: 'confirm' });
+  }
+
+  onQuery(e) { this.setState({ query: e.target.value }); }
+  runSearch(q) { this.setState({ query: q, searched: true, tab: 'search', overlay: null }); }
+  clearSearch() { this.setState({ query: '', searched: false }); }
+
+  reply(t) {
+    const q = (t || '').toLowerCase();
+    if (q.includes('birthday')) return { text: 'Found 23 photos and 4 clips from Roan\u2019s 1st birthday \u2014 14 Oct 2025. Want me to make a memory book?', photoIdx: [0, 3, 8, 5], actionKey: 'book' };
+    if (q.includes('reel') || q.includes('video') || q.includes('month')) return { text: 'I built an April reel \u2014 0:48, 32 clips set to music. Have a look.', photoIdx: [1, 6, 9], actionKey: 'reel' };
+    if (q.includes('step') || q.includes('mila')) return { text: 'Mila\u2019s first steps were detected on 3 Mar 2026 and added to her timeline.', photoIdx: [4, 7, 11], actionKey: null };
+    if (q.includes('print') || q.includes('canvas') || q.includes('book')) return { text: 'These would look beautiful as prints. Shall I open the Print Shop?', photoIdx: [3, 0], actionKey: 'shop' };
+    return { text: 'I found 18 moments that match. Here\u2019s a quick preview \u2014 open Search to see them all.', photoIdx: [2, 10, 5, 8], actionKey: 'search' };
+  }
+  ask(text) {
+    if (!text || !text.trim()) return;
+    const r = this.reply(text);
+    const chat = [...this.state.chat, { role: 'user', text }, { role: 'ai', text: r.text, photoIdx: r.photoIdx, actionKey: r.actionKey }];
+    this.setState({ chat, chatInput: '' });
+  }
+  onChatInput(e) { this.setState({ chatInput: e.target.value }); }
+  sendChat() { this.ask(this.state.chatInput); }
+
+  renderVals() {
+    const S = this.state;
+    const deep = '#1B4794', sky = '#4CA8E4', slate = '#9AA3AF', warm = this.props.accent || '#FF7A59', warmDeep = '#EF5E3C';
+    const isA = S.platform === 'android';
+    const G = this.G;
+    const navIds = ['timeline', 'moments', 'search', 'shop', 'family'];
+    const nav = {};
+    navIds.forEach(id => {
+      const on = S.tab === id;
+      nav[id] = { on, color: on ? deep : slate, pill: (isA && on) ? 'rgba(76,168,228,0.20)' : 'transparent', go: () => this.go(id) };
+    });
+
+    const chips = [{ id: 'all', label: 'All' }, { id: 'roan', label: 'Roan' }, { id: 'mila', label: 'Mila' }].map(c => {
+      const active = S.child === c.id;
+      return { id: c.id, label: c.label, active, chipBg: active ? deep : '#fff', chipColor: active ? '#fff' : '#4B5563', chipBorder: active ? deep : '#E5E7EB', onClick: () => this.setChild(c.id) };
+    });
+
+    const products = [
+      { id: 'prints', name: 'Photo Prints', price: 0.19, unit: '/ photo', desc: 'Glossy or matte \u00B7 10\u00D715 cm', bg: G[0] },
+      { id: 'book', name: 'Hardcover Photo Book', price: 29.99, unit: '', desc: 'AI-designed \u00B7 24 pages', bg: G[3], featured: true },
+      { id: 'canvas', name: 'Canvas Print', price: 39.99, unit: '', desc: 'Gallery wrap \u00B7 40\u00D740 cm', bg: G[7] },
+      { id: 'calendar', name: 'Wall Calendar', price: 19.99, unit: '', desc: '12 months \u00B7 A3', bg: G[5] },
+      { id: 'mug', name: 'Photo Mug', price: 14.99, unit: '', desc: 'Dishwasher safe \u00B7 325 ml', bg: G[1] },
+      { id: 'cards', name: 'Greeting Cards', price: 12.99, unit: '/ 10', desc: 'Folded \u00B7 with envelopes', bg: G[10] },
+    ];
+    const productCards = products.map(p => ({ ...p, priceLabel: this.eur(p.price) + (p.unit ? ' ' + p.unit : ''), onClick: () => this.openProduct(p), onAdd: () => this.addToCart(p, 1) }));
+
+    const cartItems = S.cart.map(x => ({ ...x, lineLabel: this.eur(x.price * x.qty), qtyLabel: String(x.qty), inc: () => this.cartInc(x.id, 1), dec: () => this.cartInc(x.id, -1) }));
+    const subtotal = S.cart.reduce((a, x) => a + x.price * x.qty, 0);
+    const shipping = subtotal === 0 ? 0 : (subtotal >= 50 ? 0 : 4.99);
+    const total = subtotal + shipping;
+    const cartCount = S.cart.reduce((a, x) => a + x.qty, 0);
+
+    const FLAG = 'M5 3v18M5 4h11l-2 4 2 4H5';
+    const CAKE = 'M4 21h16M5 21v-7h14v7M7 14v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2M12 8V5';
+    const TOOTH = 'M12 4c-3 0-5 2-5 5 0 4 1.6 11 3 11 1.1 0 1-4 2-4s.9 4 2 4c1.4 0 3-7 3-11 0-3-2-5-5-5Z';
+    const SCHOOL = 'M3 9l9-5 9 5-9 5-9-5Zm4 3v4c0 1.2 3 2.5 5 2.5s5-1.3 5-2.5v-4';
+    const SUN = 'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM12 2v2M12 20v2M4 12H2M22 12h-2M5.6 5.6 7 7M17 17l1.4 1.4';
+    const milestones = [
+      { id: 'm1', path: FLAG, title: 'First steps', who: 'Mila', date: 'Mar 2026', tone: 'new' },
+      { id: 'm2', path: TOOTH, title: 'Lost first tooth', who: 'Roan', date: 'Feb 2026', tone: 'new' },
+      { id: 'm3', path: CAKE, title: 'First birthday', who: 'Mila', date: 'Oct 2025', tone: 'done' },
+      { id: 'm4', path: SCHOOL, title: 'First day of school', who: 'Roan', date: 'Sep 2025', tone: 'done' },
+      { id: 'm5', path: SUN, title: 'Summer in Portugal', who: 'Family', date: 'Aug 2025', tone: 'done' },
+    ].map((m, i) => ({ ...m, bg: G[(i * 2) % G.length], isNew: m.tone === 'new', toneLabel: m.tone === 'new' ? 'Detected' : 'In timeline', toneTone: m.tone === 'new' ? 'success' : 'neutral' }));
+
+    const reels = [
+      { id: 'r1', month: 'April 2026', dur: '0:48', bg: G[8], ready: true },
+      { id: 'r2', month: 'March 2026', dur: '1:02', bg: G[4], ready: false },
+      { id: 'r3', month: 'February 2026', dur: '0:54', bg: G[11], ready: false },
+    ].map(r => ({ ...r, onPlay: () => this.open('reel') }));
+
+    const books = [
+      { id: 'b1', title: 'Roan \u2014 Year One', sub: '32 pages \u00B7 Printed', bg: G[3] },
+      { id: 'b2', title: 'Our 2025', sub: '48 pages \u00B7 Digital', bg: G[7] },
+    ];
+
+    const members = [
+      { id: 'u1', name: 'Sofia', role: 'You \u00B7 Admin', initials: 'S', bg: G[0], you: true },
+      { id: 'u2', name: 'Daan', role: 'Parent', initials: 'D', bg: G[4], you: false },
+      { id: 'u3', name: 'Oma Riet', role: 'Grandparent', initials: 'R', bg: G[2], you: false },
+      { id: 'u4', name: 'Opa Joop', role: 'Grandparent', initials: 'J', bg: G[5], you: false },
+    ];
+
+    const searchChips = ['Roan\u2019s first birthday', 'Beach days', 'Just Mila', 'Christmas 2025', 'Everyone smiling'].map(l => ({ label: l, onClick: () => this.runSearch(l) }));
+    const searchResults = [0, 3, 8, 5, 1, 6, 9, 2, 10].map((i, k) => ({ id: 'sr' + k, bg: G[i % G.length] }));
+
+    const chatMsgs = S.chat.map((m, k) => {
+      const handlers = { book: () => this.open('book'), reel: () => this.open('reel'), shop: () => this.go('shop'), search: () => this.go('search') };
+      const labels = { book: 'Create memory book', reel: 'Play reel', shop: 'Open Print Shop', search: 'Open Search' };
+      return {
+        id: 'c' + k, isUser: m.role === 'user', text: m.text,
+        rowJustify: m.role === 'user' ? 'flex-end' : 'flex-start',
+        bubbleBg: m.role === 'user' ? deep : '#fff', bubbleColor: m.role === 'user' ? '#fff' : '#1F2937',
+        bubbleBorder: m.role === 'user' ? deep : '#E9ECF2',
+        photos: (m.photoIdx || []).map((i, j) => ({ id: 'cp' + k + j, bg: G[i % G.length] })),
+        hasPhotos: !!(m.photoIdx && m.photoIdx.length),
+        hasAction: !!m.actionKey, actionLabel: m.actionKey ? labels[m.actionKey] : '', action: m.actionKey ? handlers[m.actionKey] : null,
+      };
+    });
+
+    const ov = { book: S.overlay === 'book', reel: S.overlay === 'reel', paywall: S.overlay === 'paywall', product: S.overlay === 'product', cart: S.overlay === 'cart', checkout: S.overlay === 'checkout', confirm: S.overlay === 'confirm', story: S.overlay === 'story', assistant: S.overlay === 'assistant', any: !!S.overlay };
+
+    const p = S.product || products[1];
+    const planYear = S.plan === 'year';
+
+    return {
+      // chrome
+      isA, isIOS: !isA, statusTime: isA ? '9:41' : '9:41',
+      setIOS: () => this.setPlat('ios'), setAND: () => this.setPlat('android'),
+      segIosBg: !isA ? '#1B4794' : 'transparent', segIosColor: !isA ? '#fff' : '#6B7280',
+      segAndBg: isA ? '#1B4794' : 'transparent', segAndColor: isA ? '#fff' : '#6B7280',
+      nav, warm, warmDeep, deep, sky,
+      premium: S.premium, notPremium: !S.premium,
+      cartCount, hasCart: cartCount > 0, cartCountLabel: String(cartCount),
+      // tabs visibility
+      tTimeline: S.tab === 'timeline', tMoments: S.tab === 'moments', tSearch: S.tab === 'search', tShop: S.tab === 'shop', tFamily: S.tab === 'family',
+      // data
+      chips, productCards, cartItems, milestones, reels, books, members, searchChips, searchResults, chatMsgs,
+      hasCartItems: S.cart.length > 0,
+      subtotalLabel: this.eur(subtotal), shippingLabel: shipping === 0 ? 'Free' : this.eur(shipping), totalLabel: this.eur(total),
+      // search
+      query: S.query, searched: S.searched, notSearched: !S.searched, onQuery: this.onQuery.bind(this),
+      searchAnswer: S.query ? ('Found 23 moments for \u201C' + S.query + '\u201D') : '', searchSub: 'Roan \u00B7 Oct 2025 \u2014 newest first',
+      clearSearch: () => this.clearSearch(),
+      // chat
+      chatInput: S.chatInput, onChatInput: this.onChatInput.bind(this), sendChat: () => this.sendChat(),
+      // product overlay
+      prodName: p.name, prodDesc: p.desc, prodBg: p.bg, prodPriceLabel: this.eur(p.price), pqty: S.pqty, pqtyLabel: String(S.pqty),
+      prodTotalLabel: this.eur(p.price * S.pqty), incP: () => this.setPqty(1), decP: () => this.setPqty(-1),
+      addCurrent: () => this.addToCart(p, S.pqty),
+      // plan
+      planYear, planMonth: !planYear, setYear: () => this.setPlan('year'), setMonth: () => this.setPlan('month'),
+      planPrice: planYear ? '\u20AC39.99' : '\u20AC4.99', planPer: planYear ? '/ year' : '/ month',
+      planNote: planYear ? 'Billed yearly \u00B7 just \u20AC3.33 / month' : 'Billed monthly \u00B7 cancel anytime',
+      yearBg: planYear ? '#FFF1EC' : '#fff', yearBorder: planYear ? warm : '#E5E7EB',
+      monthBg: !planYear ? '#FFF1EC' : '#fff', monthBorder: !planYear ? warm : '#E5E7EB',
+      orderNo: S.orderNo,
+      // overlays
+      ov,
+      openBook: () => this.open('book'), openReel: () => this.open('reel'), openPaywall: () => this.open('paywall'),
+      openCart: () => this.open('cart'), openStory: () => this.open('story'), openAssistant: () => this.open('assistant'),
+      openCheckout: () => this.open('checkout'), closeOverlay: () => this.close(), placeOrder: () => this.placeOrder(),
+      backToShop: () => this.go('shop'), startTrial: () => this.goPremium(),
+      openBookProduct: () => this.openProduct(products[1]),
+    };
+  }
+}
+</script>
+</body>
+</html>

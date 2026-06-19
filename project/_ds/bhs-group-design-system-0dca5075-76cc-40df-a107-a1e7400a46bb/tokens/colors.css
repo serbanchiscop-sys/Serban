@@ -1,0 +1,91 @@
+/* ============================================================
+   BHS GROUP — COLOR TOKENS
+   Sampled from the official logo. Usage ratio 60 / 30 / 10:
+   Deep Blue 60%  ·  White / Off-White 30%  ·  Sky Blue + Cyan 10%
+   ============================================================ */
+
+:root {
+  /* ---- Brand primaries ---- */
+  --bhs-deep-blue: #1B4794;   /* dominant brand color — BHS tile fill */
+  --bhs-sky-blue:  #4CA8E4;   /* lighter top of the tile — highlights, hover */
+  --bhs-cyan:      #2196F3;   /* signal accent — links, data callouts (sparingly) */
+
+  /* Deep-blue tint/shade ramp (derived) */
+  --bhs-blue-900: #0E2A5C;
+  --bhs-blue-800: #143A7A;
+  --bhs-blue-700: #1B4794;   /* = deep blue */
+  --bhs-blue-600: #2358AE;
+  --bhs-blue-500: #2F6CC9;
+  --bhs-blue-400: #4CA8E4;   /* = sky blue */
+  --bhs-blue-300: #7CC1ED;
+  --bhs-blue-200: #B0DAF4;
+  --bhs-blue-100: #DCEEFB;
+  --bhs-blue-50:  #F0F8FE;
+
+  /* ---- Neutrals ---- */
+  --bhs-black:      #000000;  /* premium dark canvas — cover / hero */
+  --bhs-charcoal:   #1F2937;  /* body text on light, dark UI surfaces */
+  --bhs-slate:      #6B7280;  /* wordmark gray — secondary copy */
+  --bhs-mist:       #B5B5B5;  /* tagline gray — captions, disabled */
+  --bhs-off-white:  #F5F7FA;  /* default content canvas */
+  --bhs-white:      #FFFFFF;
+
+  /* Neutral ramp */
+  --bhs-gray-900: #111827;
+  --bhs-gray-800: #1F2937;   /* = charcoal */
+  --bhs-gray-700: #374151;
+  --bhs-gray-600: #4B5563;
+  --bhs-gray-500: #6B7280;   /* = slate */
+  --bhs-gray-400: #9CA3AF;
+  --bhs-gray-300: #D1D5DB;
+  --bhs-gray-200: #E5E7EB;
+  --bhs-gray-100: #F3F4F6;
+  --bhs-gray-50:  #F9FAFB;
+
+  /* ---- Semantic / status ---- */
+  --bhs-success: #1F8A5B;
+  --bhs-warning: #C77700;
+  --bhs-danger:  #C0392B;
+  --bhs-info:    var(--bhs-cyan);
+
+  /* ---- Brand gradients ---- */
+  --bhs-gradient-tile: linear-gradient(160deg, #4CA8E4 0%, #1B4794 60%, #143A7A 100%); /* @kind color */
+  --bhs-gradient-hero: linear-gradient(160deg, #1B4794 0%, #0E2A5C 100%); /* @kind color */
+
+  /* ============================================================
+     SEMANTIC ALIASES  (use these in components, not raw values)
+     ============================================================ */
+
+  /* Text */
+  --text-strong:   var(--bhs-charcoal);
+  --text-body:     var(--bhs-gray-700);
+  --text-muted:    var(--bhs-slate);
+  --text-faint:    var(--bhs-mist);
+  --text-on-dark:  var(--bhs-white);
+  --text-on-dark-muted: rgba(255, 255, 255, 0.72);
+  --text-link:     var(--bhs-cyan);
+  --text-brand:    var(--bhs-deep-blue);
+
+  /* Surfaces */
+  --surface-page:    var(--bhs-off-white);
+  --surface-card:    var(--bhs-white);
+  --surface-sunken:  var(--bhs-gray-100);
+  --surface-brand:   var(--bhs-deep-blue);
+  --surface-dark:    var(--bhs-black);
+  --surface-hover:   var(--bhs-gray-50);
+
+  /* Borders */
+  --border-subtle: var(--bhs-gray-200);
+  --border-default: var(--bhs-gray-300);
+  --border-strong: var(--bhs-gray-400);
+  --border-brand:  var(--bhs-deep-blue);
+
+  /* Interactive (primary action) */
+  --action-bg:        var(--bhs-deep-blue);
+  --action-bg-hover:  var(--bhs-blue-600);
+  --action-bg-active: var(--bhs-blue-800);
+  --action-fg:        var(--bhs-white);
+
+  /* Focus ring */
+  --focus-ring: var(--bhs-sky-blue);
+}
