@@ -3,7 +3,7 @@
  * so the app and tests run with no backend and no gate. */
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
-  authEnabled, getCurrentAccount, onAuthChange, signInWithEmail, signOut, type Account,
+  authEnabled, getCurrentAccount, onAuthChange, signInWithEmail, verifyEmailCode, signOut, type Account,
 } from '../services/auth';
 
 type AuthValue = {
@@ -14,6 +14,8 @@ type AuthValue = {
   /** True once signed in AND a family exists (false → needs onboarding). */
   hasFamily: boolean;
   signIn: (email: string) => Promise<{ ok: boolean; error?: string }>;
+  /** Verify the 6-digit code emailed by signIn, completing sign-in. */
+  verifyCode: (email: string, token: string) => Promise<{ ok: boolean; error?: string }>;
   signOut: () => Promise<void>;
   /** Re-read the account from the backend (e.g. after creating a family). */
   refresh: () => Promise<void>;
@@ -45,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signedIn: !!account,
     hasFamily: !!account?.familyId,
     signIn: signInWithEmail,
+    verifyCode: verifyEmailCode,
     signOut: async () => { await signOut(); setAccount(null); },
     refresh: async () => { setAccount(await getCurrentAccount()); },
   }), [ready, account]);

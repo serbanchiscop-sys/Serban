@@ -1,8 +1,10 @@
 /* Auth / family-account service.
  *
- * Phase 2: real passwordless email magic-link auth via Supabase. When Supabase
- * is not configured the service runs in DEMO mode (a fixed "Sofia" household) so
- * the app is fully usable offline and in tests. */
+ * Real passwordless email auth via Supabase, using a 6-digit code (OTP) rather
+ * than a magic link — a link can't return into a native iOS/Android app, but a
+ * code the user types works everywhere. When Supabase is not configured the
+ * service runs in DEMO mode (a fixed "Sofia" household) so the app is fully
+ * usable offline and in tests. */
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export type Account = { id: string; name: string; household: string; email?: string; familyId: string | null };
@@ -12,13 +14,20 @@ export const authEnabled = isSupabaseConfigured;
 
 const DEMO: Account = { id: 'demo-sofia', name: 'Sofia', household: 'Sofia’s family', familyId: 'demo-family' };
 
-/** Send a magic link / OTP to the given email. */
+/** Email a 6-digit sign-in code to the given address (creates the user if new). */
 export async function signInWithEmail(email: string): Promise<{ ok: boolean; error?: string }> {
-  if (!supabase) return { ok: true }; // demo: pretend a link was sent
+  if (!supabase) return { ok: true }; // demo: pretend a code was sent
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: window.location.origin },
+    options: { shouldCreateUser: true },
   });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+/** Verify the 6-digit code from the sign-in email and start the session. */
+export async function verifyEmailCode(email: string, token: string): Promise<{ ok: boolean; error?: string }> {
+  if (!supabase) return { ok: true }; // demo: any code works
+  const { error } = await supabase.auth.verifyOtp({ email, token: token.trim(), type: 'email' });
   return error ? { ok: false, error: error.message } : { ok: true };
 }
 
