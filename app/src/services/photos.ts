@@ -13,6 +13,7 @@ import { G } from '../data/content';
 import { uploadMedia, setMediaCaption } from './storage';
 import { enqueue, type Uploader } from './uploadQueue';
 import { captionPhoto } from './ai';
+import { recognizeChild } from './faces';
 
 export type LocalPhoto = {
   id: string;
@@ -97,7 +98,12 @@ export async function queueImported(
 export const runUpload: Uploader = async (item) => {
   try {
     const blob = await (await fetch(item.srcUri)).blob();
-    const res = await uploadMedia(item.familyId, item.childId, blob, item.name);
+    // If no child was chosen, try to recognize one from the family's tagged faces.
+    let childId = item.childId;
+    if (!childId) {
+      try { childId = await recognizeChild(item.familyId, item.srcUri); } catch { /* fall back to none */ }
+    }
+    const res = await uploadMedia(item.familyId, childId, blob, item.name);
     if (res.ok && res.path) void captionInBackground(res.path, blob);
     return res;
   } catch (e) {

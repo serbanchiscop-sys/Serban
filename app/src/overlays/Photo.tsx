@@ -5,6 +5,7 @@ import { useApp } from '../state/store';
 import { useAuth } from '../state/auth';
 import { listChildren } from '../services/family';
 import { assignMediaChild } from '../services/storage';
+import { rememberFace } from '../services/faces';
 
 export function Photo() {
   const { state, close, bumpMedia } = useApp();
@@ -23,6 +24,10 @@ export function Photo() {
     if (busy) return;
     setBusy(childId ?? 'none');
     await assignMediaChild(photo.id, childId);
+    // Learn this face so future photos of this child auto-tag.
+    if (childId && account?.familyId && photo.url) {
+      void rememberFace(account.familyId, childId, photo.url);
+    }
     bumpMedia();   // tells the Timeline to refetch
     close();
   };
