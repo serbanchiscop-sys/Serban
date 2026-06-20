@@ -69,6 +69,8 @@ async function mapAccount(id: string, email?: string): Promise<Account> {
       const famName = Array.isArray(fam) ? fam[0]?.name : fam?.name;
       if (famName) household = famName;
     }
+    // Ensure a profile row exists so the family circle can show a name.
+    await supabase.from('profiles').upsert({ id, display_name: name }, { onConflict: 'id' });
   }
   return { id, name, household, email, familyId };
 }

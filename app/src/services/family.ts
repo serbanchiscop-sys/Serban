@@ -38,15 +38,16 @@ export async function acceptInvite(code: string): Promise<{ ok: boolean; familyI
 /** Members of a family for the Family circle. Demo → the sample MEMBERS. */
 export async function listMembers(familyId: string): Promise<Member[]> {
   if (!supabase) return MEMBERS;
-  const { data } = await supabase
-    .from('family_members')
-    .select('user_id, role, profiles(display_name)')
-    .eq('family_id', familyId);
-  if (!data?.length) return MEMBERS;
-  return data.map((row, i): Member => {
-    const prof = row.profiles as { display_name?: string } | { display_name?: string }[] | undefined;
-    const name = (Array.isArray(prof) ? prof[0]?.display_name : prof?.display_name) || 'Member';
+  const { data: members } = await supabase
+    .from('family_members').select('user_id, role').eq('family_id', familyId);
+  if (!members?.length) return MEMBERS;
+  // Names live in `profiles`; fetch them separately (no FK path to embed).
+  const ids = members.map((m) => m.user_id as string);
+  const { data: profs } = await supabase.from('profiles').select('id, display_name').in('id', ids);
+  const nameById = new Map((profs ?? []).map((p) => [p.id as string, p.display_name as string | null]));
+  return members.map((row, i): Member => {
     const role = String(row.role);
+    const name = nameById.get(row.user_id as string) || 'Member';
     return {
       id: String(row.user_id),
       name,
@@ -56,4 +57,11 @@ export async function listMembers(familyId: string): Promise<Member[]> {
       you: role === 'admin',
     };
   });
+}
+
+/** Children of a family (real). Demo → empty (caller falls back to samples). */
+export async function listChildren(familyId: string): Promise<{ id: string; name: string }[]> {
+  if (!supabase) return [];
+  const { data } = await supabase.from('children').select('id, name').eq('family_id', familyId).order('name');
+  return (data ?? []).map((c) => ({ id: String(c.id), name: String(c.name) }));
 }

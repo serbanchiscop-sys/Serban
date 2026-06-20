@@ -13,7 +13,8 @@ export type Tab = 'timeline' | 'moments' | 'search' | 'shop' | 'family';
 export type Overlay =
   | null | 'product' | 'cart' | 'checkout' | 'confirm'
   | 'book' | 'story' | 'reel' | 'paywall' | 'assistant' | 'invite' | 'import';
-export type ChildId = 'all' | 'roan' | 'mila';
+/** 'all', a demo id ('roan'/'mila'), or a real child UUID. */
+export type ChildId = string;
 
 export type CartItem = { id: string; name: string; price: number; bg: string; qty: number };
 export type ChatMsg = {

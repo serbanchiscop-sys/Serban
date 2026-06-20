@@ -44,3 +44,10 @@ export async function setMediaCaption(path: string, caption: string, tags: strin
   if (!supabase) return;
   await supabase.from('media').update({ caption, tags }).eq('storage_path', path);
 }
+
+/** Count of media items in the family's library. */
+export async function getMediaCount(familyId: string): Promise<number> {
+  if (!supabase) return 0;
+  const { count } = await supabase.from('media').select('id', { count: 'exact', head: true }).eq('family_id', familyId);
+  return count ?? 0;
+}
