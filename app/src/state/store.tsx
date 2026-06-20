@@ -12,7 +12,7 @@ import { purchaseSubscription, restorePurchases, initBilling, type Plan } from '
 export type Tab = 'timeline' | 'moments' | 'search' | 'shop' | 'family';
 export type Overlay =
   | null | 'product' | 'cart' | 'checkout' | 'confirm'
-  | 'book' | 'story' | 'reel' | 'paywall' | 'assistant' | 'invite' | 'import';
+  | 'book' | 'story' | 'reel' | 'paywall' | 'assistant' | 'invite' | 'import' | 'photo';
 /** 'all', a demo id ('roan'/'mila'), or a real child UUID. */
 export type ChildId = string;
 
@@ -39,6 +39,10 @@ export type State = {
   premium: boolean;
   chat: ChatMsg[];
   chatInput: string;
+  /** Photo open in the viewer (for child tagging). */
+  photo: { id: string; url: string; childId: string | null } | null;
+  /** Bumped after a media change so screens refetch. */
+  mediaVersion: number;
 };
 
 const GREETING: ChatMsg = {
@@ -61,6 +65,8 @@ const initialState: State = {
   premium: false,
   chat: [GREETING],
   chatInput: '',
+  photo: null,
+  mediaVersion: 0,
 };
 
 type Action =
@@ -81,6 +87,8 @@ type Action =
   | { type: 'clearSearch' }
   | { type: 'setChatInput'; value: string }
   | { type: 'pushChat'; messages: ChatMsg[] }
+  | { type: 'openPhoto'; photo: { id: string; url: string; childId: string | null } }
+  | { type: 'bumpMedia' }
   | { type: 'hydrate'; patch: Partial<State> };
 
 function reducer(s: State, a: Action): State {
@@ -89,7 +97,9 @@ function reducer(s: State, a: Action): State {
     case 'go': return { ...s, tab: a.tab, overlay: null };
     case 'setChild': return { ...s, child: a.child };
     case 'openOverlay': return { ...s, overlay: a.overlay };
-    case 'closeOverlay': return { ...s, overlay: null };
+    case 'closeOverlay': return { ...s, overlay: null, photo: null };
+    case 'openPhoto': return { ...s, photo: a.photo, overlay: 'photo' };
+    case 'bumpMedia': return { ...s, mediaVersion: s.mediaVersion + 1 };
     case 'setPlan': return { ...s, plan: a.plan };
     case 'setPremium': return { ...s, premium: a.premium, overlay: a.premium ? null : s.overlay };
     case 'openProduct': return { ...s, product: a.product, pqty: 1, overlay: 'product' };
@@ -143,6 +153,8 @@ type Store = {
   sendChat: () => void;
   startTrial: () => void;
   restore: () => void;
+  openPhoto: (p: { id: string; url: string; childId: string | null }) => void;
+  bumpMedia: () => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -209,6 +221,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (res.premium) dispatch({ type: 'setPremium', premium: true });
       });
     },
+    openPhoto: (p) => dispatch({ type: 'openPhoto', photo: p }),
+    bumpMedia: () => dispatch({ type: 'bumpMedia' }),
   }), [state]);
 
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>;

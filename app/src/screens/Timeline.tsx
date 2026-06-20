@@ -13,7 +13,7 @@ import { listMedia, type MediaRow } from '../services/storage';
 const DEEP = '#1B4794';
 
 export function Timeline() {
-  const { state, open, setChild } = useApp();
+  const { state, open, setChild, openPhoto } = useApp();
   const { account, enabled } = useAuth();
   const household = account?.household ?? 'Sofia’s family';
   const notPremium = !state.premium;
@@ -40,7 +40,7 @@ export function Timeline() {
     if (!canUpload || !fid) return;
     void listChildren(fid).then(setChildren);
     void listMedia(fid).then(setMedia);
-  }, [canUpload, account?.familyId, pending]);
+  }, [canUpload, account?.familyId, pending, state.mediaVersion]);
 
   // Signed-in accounts get a real-data Timeline; the offline demo keeps the
   // prototype content below, byte-for-byte.
@@ -48,7 +48,8 @@ export function Timeline() {
     return (
       <RealTimeline household={household} childList={children} media={media}
         pending={pending} notPremium={notPremium} activeChild={state.child}
-        onChild={setChild} onOpen={open} />
+        onChild={setChild} onOpen={open}
+        onPhoto={(m) => openPhoto({ id: m.id, url: m.url, childId: m.childId })} />
     );
   }
 
@@ -187,7 +188,7 @@ export function Timeline() {
 
 /* ---- Real-data Timeline (signed-in accounts) ---- */
 function RealTimeline({
-  household, childList, media, pending, notPremium, activeChild, onChild, onOpen,
+  household, childList, media, pending, notPremium, activeChild, onChild, onOpen, onPhoto,
 }: {
   household: string;
   childList: { id: string; name: string }[];
@@ -197,6 +198,7 @@ function RealTimeline({
   activeChild: ChildId;
   onChild: (c: ChildId) => void;
   onOpen: (o: Overlay) => void;
+  onPhoto: (m: MediaRow) => void;
 }) {
   const chips = [{ id: 'all', label: 'All' }, ...childList.map((c) => ({ id: c.id, label: c.name }))];
   const empty = media.length === 0;
@@ -284,10 +286,10 @@ function RealTimeline({
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 6 }}>
               {shown.map((m) => (
-                <div key={m.id} style={{ aspectRatio: '1', borderRadius: 11, overflow: 'hidden', background: '#EEF1F6' }}>
+                <button key={m.id} onClick={() => onPhoto(m)} style={{ aspectRatio: '1', borderRadius: 11, overflow: 'hidden', background: '#EEF1F6', border: 'none', padding: 0, cursor: 'pointer' }}>
                   {m.url && <img src={m.url} alt={m.caption ?? 'photo'} loading="lazy"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
-                </div>
+                </button>
               ))}
             </div>
           )}

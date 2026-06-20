@@ -45,6 +45,13 @@ export async function setMediaCaption(path: string, caption: string, tags: strin
   await supabase.from('media').update({ caption, tags }).eq('storage_path', path);
 }
 
+/** Assign a photo to a child (the label that seeds face recognition). */
+export async function assignMediaChild(mediaId: string, childId: string | null): Promise<{ ok: boolean; error?: string }> {
+  if (!supabase) return { ok: true };
+  const { error } = await supabase.from('media').update({ child_id: childId }).eq('id', mediaId);
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
 /** Count of media items in the family's library. */
 export async function getMediaCount(familyId: string): Promise<number> {
   if (!supabase) return 0;

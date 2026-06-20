@@ -12,6 +12,7 @@ import { Paywall } from './Paywall';
 import { Assistant } from './Assistant';
 import { Invite } from './Invite';
 import { Import } from './Import';
+import { Photo } from './Photo';
 
 export function Overlays() {
   const { state, close } = useApp();
@@ -32,6 +33,7 @@ export function Overlays() {
       {overlay === 'assistant' && <Assistant />}
       {overlay === 'invite' && <Invite />}
       {overlay === 'import' && <Import />}
+      {overlay === 'photo' && <Photo />}
     </div>
   );
 }
