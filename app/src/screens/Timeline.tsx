@@ -8,7 +8,7 @@ import { Sparkle, SearchIcon, Play, Plus } from '../components/Icon';
 import { runUpload } from '../services/photos';
 import { pendingCount, processQueue, startAutoFlush } from '../services/uploadQueue';
 import { listChildren } from '../services/family';
-import { getMediaCount } from '../services/storage';
+import { listMedia, type MediaRow } from '../services/storage';
 
 const DEEP = '#1B4794';
 
@@ -23,9 +23,9 @@ export function Timeline() {
   const [pending, setPending] = useState(0);
   const canUpload = enabled && !!account?.familyId;
 
-  // Real family data (children + library size) for signed-in accounts.
+  // Real family data (children + library) for signed-in accounts.
   const [children, setChildren] = useState<{ id: string; name: string }[]>([]);
-  const [mediaCount, setMediaCount] = useState(0);
+  const [media, setMedia] = useState<MediaRow[]>([]);
 
   // On mount (and when connectivity returns), drain any queued uploads.
   useEffect(() => {
@@ -39,14 +39,14 @@ export function Timeline() {
     const fid = account?.familyId;
     if (!canUpload || !fid) return;
     void listChildren(fid).then(setChildren);
-    void getMediaCount(fid).then(setMediaCount);
+    void listMedia(fid).then(setMedia);
   }, [canUpload, account?.familyId, pending]);
 
   // Signed-in accounts get a real-data Timeline; the offline demo keeps the
   // prototype content below, byte-for-byte.
   if (canUpload) {
     return (
-      <RealTimeline household={household} childList={children} mediaCount={mediaCount}
+      <RealTimeline household={household} childList={children} media={media}
         pending={pending} notPremium={notPremium} activeChild={state.child}
         onChild={setChild} onOpen={open} />
     );
@@ -187,11 +187,11 @@ export function Timeline() {
 
 /* ---- Real-data Timeline (signed-in accounts) ---- */
 function RealTimeline({
-  household, childList, mediaCount, pending, notPremium, activeChild, onChild, onOpen,
+  household, childList, media, pending, notPremium, activeChild, onChild, onOpen,
 }: {
   household: string;
   childList: { id: string; name: string }[];
-  mediaCount: number;
+  media: MediaRow[];
   pending: number;
   notPremium: boolean;
   activeChild: ChildId;
@@ -199,7 +199,8 @@ function RealTimeline({
   onOpen: (o: Overlay) => void;
 }) {
   const chips = [{ id: 'all', label: 'All' }, ...childList.map((c) => ({ id: c.id, label: c.name }))];
-  const empty = mediaCount === 0;
+  const empty = media.length === 0;
+  const shown = activeChild === 'all' ? media : media.filter((m) => m.childId === activeChild);
 
   return (
     <div style={{ padding: '6px 18px 26px' }}>
@@ -270,12 +271,27 @@ function RealTimeline({
           )}
         </div>
       ) : (
-        /* Library summary (real photos render here once thumbnailing lands) */
-        <div style={{ background: 'linear-gradient(155deg,#1B4794,#0E2A5C)', borderRadius: 20, padding: 18, color: '#fff', boxShadow: '0 14px 30px -10px rgba(27,71,148,.5)' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#9FD0F2' }}>Your library</div>
-          <div style={{ fontSize: 22, fontWeight: 800, marginTop: 8 }}>{mediaCount} photo{mediaCount > 1 ? 's' : ''} imported</div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,.8)', marginTop: 4, lineHeight: 1.5 }}>AI is organizing them by child and detecting milestones. Ask the assistant to find any moment.</div>
-        </div>
+        /* Real photo library */
+        <>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 11 }}>
+            <div style={{ fontSize: 16, fontWeight: 800, color: '#15233F', letterSpacing: '-.01em' }}>Your photos</div>
+            <div style={{ fontSize: 13, color: '#8A93A6' }}>{media.length} in library</div>
+          </div>
+          {shown.length === 0 ? (
+            <div style={{ background: '#fff', border: '1px solid #EDF0F4', borderRadius: 16, padding: '22px', textAlign: 'center', color: '#8A93A6', fontSize: 13.5 }}>
+              No photos for this child yet.
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 6 }}>
+              {shown.map((m) => (
+                <div key={m.id} style={{ aspectRatio: '1', borderRadius: 11, overflow: 'hidden', background: '#EEF1F6' }}>
+                  {m.url && <img src={m.url} alt={m.caption ?? 'photo'} loading="lazy"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       {/* Free-tier upsell (real premium gating) */}

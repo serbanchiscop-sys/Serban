@@ -51,3 +51,26 @@ export async function getMediaCount(familyId: string): Promise<number> {
   const { count } = await supabase.from('media').select('id', { count: 'exact', head: true }).eq('family_id', familyId);
   return count ?? 0;
 }
+
+export type MediaRow = { id: string; url: string; childId: string | null; caption: string | null };
+
+/** Recent media with short-lived signed URLs (the bucket is private). */
+export async function listMedia(familyId: string, limit = 60): Promise<MediaRow[]> {
+  if (!supabase) return [];
+  const { data } = await supabase
+    .from('media')
+    .select('id, storage_path, child_id, caption')
+    .eq('family_id', familyId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (!data?.length) return [];
+  const paths = data.map((r) => r.storage_path as string);
+  const { data: signed } = await supabase.storage.from(BUCKET).createSignedUrls(paths, 3600);
+  const urlByPath = new Map((signed ?? []).map((s) => [s.path, s.signedUrl] as const));
+  return data.map((r) => ({
+    id: String(r.id),
+    url: urlByPath.get(r.storage_path as string) ?? '',
+    childId: r.child_id ? String(r.child_id) : null,
+    caption: (r.caption as string | null) ?? null,
+  }));
+}
