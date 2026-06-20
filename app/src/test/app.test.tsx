@@ -60,7 +60,7 @@ describe('Family Moments AI', () => {
     expect(screen.queryByLabelText('Add photos')).not.toBeInTheDocument();
     // Storage meter renders the (demo) quota.
     fireEvent.click(screen.getByText('Family'));
-    expect(screen.getByText('4.8 / 5 GB')).toBeInTheDocument();
+    expect(screen.getByText('4.8 GB · Unlimited')).toBeInTheDocument();
   });
 
   it('unlocking premium removes the ad slot', async () => {

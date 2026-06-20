@@ -8,17 +8,13 @@ import { supabase } from '../lib/supabase';
 export type Quota = { usedGb: number; totalGb: number | 'unlimited' };
 
 const BUCKET = 'family-media';
-const FREE_GB = 5;
 
-export async function getQuota(premium: boolean): Promise<Quota> {
-  if (!supabase) {
-    return premium ? { usedGb: 4.8, totalGb: 'unlimited' } : { usedGb: 4.8, totalGb: FREE_GB };
-  }
-  // Real usage is summed server-side (see supabase/schema.sql media.size_bytes).
+export async function getQuota(): Promise<Quota> {
+  // Storage is unlimited and free for everyone — the product's anchor.
+  if (!supabase) return { usedGb: 4.8, totalGb: 'unlimited' };
   const { data } = await supabase.from('media').select('size_bytes');
   const bytes = (data ?? []).reduce((a, r) => a + (r.size_bytes ?? 0), 0);
-  const usedGb = +(bytes / 1e9).toFixed(1);
-  return premium ? { usedGb, totalGb: 'unlimited' } : { usedGb, totalGb: FREE_GB };
+  return { usedGb: +(bytes / 1e9).toFixed(1), totalGb: 'unlimited' };
 }
 
 /** Upload a captured/imported file and record it for the signed-in user. */

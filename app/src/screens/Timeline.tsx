@@ -299,7 +299,7 @@ function RealTimeline({
       {/* Free-tier upsell (real premium gating) */}
       {notPremium && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#F1F4F8', border: '1px dashed #CBD5E1', borderRadius: 14, padding: '12px 14px', marginTop: 18 }}>
-          <div style={{ flex: 1, fontSize: 12.5, color: '#64748B', lineHeight: 1.4 }}>Free plan · 5 GB. Go Premium for unlimited storage, no ads, and 4K reels.</div>
+          <div style={{ flex: 1, fontSize: 12.5, color: '#64748B', lineHeight: 1.4 }}>Storage is free &amp; unlimited. Go Premium for original quality, longer videos &amp; 4K reels.</div>
           <button onClick={() => onOpen('paywall')} style={{ border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 12, fontWeight: 700, color: '#1B4794', whiteSpace: 'nowrap' }}>Go Premium</button>
         </div>
       )}

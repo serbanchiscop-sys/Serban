@@ -12,9 +12,12 @@ import { getPurchases, isBillingConfigured, PREMIUM_ENTITLEMENT, PRODUCT_IDS } f
 export type Plan = 'year' | 'month';
 
 export const PLAN_PRICES: Record<Plan, { price: string; per: string; note: string }> = {
-  year: { price: '€39.99', per: '/ year', note: 'Billed yearly · just €3.33 / month' },
-  month: { price: '€4.99', per: '/ month', note: 'Billed monthly · cancel anytime' },
+  year: { price: '€29.99', per: '/ year', note: 'Billed yearly · just €2.50 / month' },
+  month: { price: '€3.99', per: '/ month', note: 'Billed monthly · cancel anytime' },
 };
+
+/** Discounted first-year price for the 7-day limited offer. */
+export const INTRO_YEAR_PRICE = '€14.99';
 
 export const billingEnabled = isBillingConfigured;
 
