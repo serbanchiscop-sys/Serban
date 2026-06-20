@@ -16,6 +16,7 @@
     "cap:android": "npm run build && cap sync android && cap open android"
   },
   "dependencies": {
+    "@capacitor-community/stripe": "^8.1.1",
     "@capacitor/android": "^8.4.1",
     "@capacitor/app": "^8.1.0",
     "@capacitor/camera": "^8.2.0",

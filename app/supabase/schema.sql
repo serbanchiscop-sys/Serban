@@ -42,6 +42,22 @@ create table if not exists media (
 create index if not exists media_family_idx on media(family_id);
 create index if not exists members_user_idx on family_members(user_id);
 
+-- Print-shop orders (physical goods — paid via Stripe, fulfilled via a
+-- print-on-demand provider; see supabase/functions/checkout).
+create table if not exists orders (
+  id            uuid primary key default gen_random_uuid(),
+  family_id     uuid not null references families(id) on delete cascade,
+  order_no      text not null unique,
+  amount_cents  bigint not null,
+  currency      text not null default 'eur',
+  status        text not null default 'paid'
+                  check (status in ('pending','paid','fulfilled','failed','refunded')),
+  stripe_payment_intent  text,
+  provider_ref  text,                 -- print-on-demand order id
+  created_at    timestamptz not null default now()
+);
+create index if not exists orders_family_idx on orders(family_id);
+
 -- ---------- Helper: families the current user belongs to ----------
 
 create or replace function my_family_ids()
@@ -70,6 +86,12 @@ create policy "members insert media" on media
   for insert with check (family_id in (select my_family_ids()));
 create policy "members delete media" on media
   for delete using (family_id in (select my_family_ids()));
+
+alter table orders enable row level security;
+create policy "members read orders" on orders
+  for select using (family_id in (select my_family_ids()));
+-- Orders are written by the checkout edge function (service role), which
+-- bypasses RLS; members get read-only visibility here.
 
 -- ---------- Atomic family creation ----------
 -- Creates a family and adds the caller as its 'admin' in one transaction.

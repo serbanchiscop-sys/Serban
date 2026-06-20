@@ -54,6 +54,7 @@ the app runs today and the UI never changes when the real implementation lands:
 | `services/auth.ts` | demo household, no gate | **Supabase magic-link** when env set (2) ✅ |
 | `services/storage.ts` | static quota | **Supabase Storage** upload + quota (2) ✅ |
 | `services/purchases.ts` | flips local premium flag | **RevenueCat** subs, env-gated (4) ✅ |
+| `services/checkout.ts` | mock order number | **Stripe** + print-on-demand (4) ✅ |
 | `services/photos.ts` | **real** picker on device, gradients on web | full library scan (2) |
 
 ### Enable the backend (Phase 2)

@@ -133,9 +133,22 @@ Your steps to switch it on:
 2. Put the public SDK keys in `app/.env`
    (`VITE_REVENUECAT_IOS_KEY` / `VITE_REVENUECAT_ANDROID_KEY`).
 
-**Still to do — print-shop (physical goods, separate path):**
-- Physical orders can't use IAP — wire a card processor (Stripe) + a
-  print-on-demand fulfilment API for the cart → checkout flow.
+**Print-shop (physical goods) — done in code (Stripe + POD, env-gated):**
+- `supabase/functions/checkout/`: creates a Stripe PaymentIntent and, after
+  payment, fulfils via a print-on-demand provider and records the order. Stripe
+  **secret** key + provider key are Supabase secrets (never in the app).
+- `lib/stripe.ts` + `services/checkout.ts`: native PaymentSheet flow
+  (intent → sheet → order) with a mock fallback so the cart → checkout →
+  confirmation flow always works. `orders` table + RLS added.
+
+Your steps to switch it on:
+1. `supabase functions deploy checkout`
+2. `supabase secrets set STRIPE_SECRET_KEY=sk_live_...` (and optionally
+   `PRINT_PROVIDER_KEY=...` for a real Prodigi/Gelato integration).
+3. Put the Stripe **publishable** key in `app/.env`
+   (`VITE_STRIPE_PUBLISHABLE_KEY`).
+4. Map cart items to the provider's SKUs in the `fulfil()` stub, and recompute
+   the charge amount from a server-side catalog (marked `TODO` in the function).
 
 ### Phase 5 — Submit
 - Generate signed builds, fill store listings, complete privacy/data-safety

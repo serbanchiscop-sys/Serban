@@ -134,6 +134,7 @@ type Store = {
   addToCart: (p: Product, qty: number) => void;
   cartInc: (id: string, delta: number) => void;
   placeOrder: () => void;
+  completeOrder: (orderNo: string) => void;
   setQuery: (q: string) => void;
   runSearch: (q: string) => void;
   clearSearch: () => void;
@@ -184,6 +185,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addToCart: (p, qty) => dispatch({ type: 'addToCart', product: p, qty }),
     cartInc: (id, delta) => dispatch({ type: 'cartInc', id, delta }),
     placeOrder: () => dispatch({ type: 'placeOrder', orderNo: 'FM-' + Math.floor(100000 + Math.random() * 899999) }),
+    completeOrder: (orderNo) => dispatch({ type: 'placeOrder', orderNo }),
     setQuery: (q) => dispatch({ type: 'setQuery', query: q }),
     runSearch: (q) => dispatch({ type: 'runSearch', query: q }),
     clearSearch: () => dispatch({ type: 'clearSearch' }),
