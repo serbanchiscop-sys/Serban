@@ -111,6 +111,11 @@ Your steps to switch it on:
 2. `supabase secrets set ANTHROPIC_API_KEY=sk-ant-...` (get a key at
    console.anthropic.com — keep it **out** of `.env` and the app).
 
+- **Multi-source photo import** (`services/importers.ts` + Import overlay): from
+  the device/iCloud library, **Google Drive** (REST, OAuth-gated), and **Files**
+  (for FamilyAlbum exports & downloads — FamilyAlbum has no public API). Imports
+  feed the upload queue; demo/mock fallback otherwise.
+
 Remaining in this phase (needs a native ML model + real photos):
 - On-device **face detection + embeddings** to replace the tag-based grouping in
   `clustering.ts` (the grouping/match layer above is already in place).

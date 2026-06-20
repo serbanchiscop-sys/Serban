@@ -1,10 +1,10 @@
 /* Timeline tab — AI feed grouped by child, milestone card, reel banner, grids. */
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApp } from '../state/store';
 import { useAuth } from '../state/auth';
 import { CHILDREN, G } from '../data/content';
 import { Sparkle, SearchIcon, Play, Plus } from '../components/Icon';
-import { pickAndQueueUpload, runUpload } from '../services/photos';
+import { runUpload } from '../services/photos';
 import { pendingCount, processQueue, startAutoFlush } from '../services/uploadQueue';
 
 const DEEP = '#1B4794';
@@ -15,31 +15,17 @@ export function Timeline() {
   const household = account?.household ?? 'Sofia’s family';
   const notPremium = !state.premium;
 
-  // Real photo import — only surfaced when a backend is configured, so the
-  // offline demo stays pixel-identical.
-  const [busy, setBusy] = useState(false);
+  // Photo import — only surfaced when a backend is configured, so the offline
+  // demo stays pixel-identical. Opens the multi-source Import sheet.
   const [pending, setPending] = useState(0);
   const canUpload = enabled && !!account?.familyId;
-
-  const flush = useCallback(async () => {
-    await processQueue(runUpload);
-    setPending(await pendingCount());
-  }, []);
 
   // On mount (and when connectivity returns), drain any queued uploads.
   useEffect(() => {
     if (!canUpload) return;
-    void flush();
+    void (async () => { await processQueue(runUpload); setPending(await pendingCount()); })();
     return startAutoFlush(runUpload);
-  }, [canUpload, flush]);
-
-  const onAddPhotos = async () => {
-    if (!account?.familyId || busy) return;
-    setBusy(true);
-    const res = await pickAndQueueUpload(account.familyId, state.child === 'all' ? null : state.child);
-    if (res.queued) { setPending(await pendingCount()); await flush(); }
-    setBusy(false);
-  };
+  }, [canUpload]);
 
   return (
     <div style={{ padding: '6px 18px 26px' }}>
@@ -51,9 +37,9 @@ export function Timeline() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {canUpload && (
-            <button onClick={onAddPhotos} disabled={busy} aria-label="Add photos"
-              style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid #E5E7EB', cursor: busy ? 'default' : 'pointer',
-                background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)', opacity: busy ? .6 : 1 }}>
+            <button onClick={() => open('import')} aria-label="Import photos"
+              style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid #E5E7EB', cursor: 'pointer',
+                background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)' }}>
               <Plus size={22} color="#1B4794" />
             </button>
           )}

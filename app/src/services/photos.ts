@@ -74,6 +74,24 @@ export async function pickAndQueueUpload(
   return { ok: true, queued: true };
 }
 
+/**
+ * Queue already-imported photos (from any import source) for upload.
+ * Skips demo gradients; returns how many were enqueued.
+ */
+export async function queueImported(
+  familyId: string,
+  childId: string | null,
+  items: { name: string; src: string; isGradient: boolean }[],
+): Promise<number> {
+  let n = 0;
+  for (const it of items) {
+    if (it.isGradient) continue; // demo placeholder, nothing real to upload
+    await enqueue({ familyId, childId, name: it.name, srcUri: it.src });
+    n++;
+  }
+  return n;
+}
+
 /** The uploader the queue runs: fetch the file by URI, store it, then (best
  * effort) ask the AI service to caption/tag it. */
 export const runUpload: Uploader = async (item) => {
