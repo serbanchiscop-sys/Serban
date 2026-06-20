@@ -1,43 +1,51 @@
 # Privacy Policy — Family Moments AI
 
-_Last updated: 19 June 2026 · **TEMPLATE — review with legal counsel before
-publishing.** Both stores require this hosted at a public URL._
+_Last updated: 20 June 2026 · **TEMPLATE — have legal counsel review before
+publishing.** Both stores require this hosted at a public HTTPS URL._
 
-This policy must describe what the **shipping** app actually does. The notes in
-brackets reflect the planned architecture in `ROADMAP.md` — update them to match
-your real backend before submitting.
+This describes the data flows the app is built around (Phases 2–4). Update the
+bracketed details to match your deployment before submitting.
 
 ## Who we are
-Family Moments AI ("we", "us") provides an app that organizes family photos and
-videos. Contact: **[your support email]**. Data controller: **[your legal entity]**.
+Family Moments AI ("we", "us") organizes family photos and turns them into
+timelines, reels, memory books and prints. Contact: **[support email]**. Data
+controller: **[your legal entity / country]**.
 
 ## What we collect
-- **Account info** — name and email when you create a family account. [Phase 2 auth]
-- **Photos & videos** — the media you choose to import, plus derived data
-  (dates, on-device face groupings, detected milestones) used to organize them.
-- **Purchase records** — subscription status and print-shop orders. Payment card
-  details are handled by the app stores / our payment processor, not stored by us.
-- **Usage & device data** — app version, device model, OS, crash diagnostics.
+- **Account** — your email address (passwordless sign-in) and your display name.
+- **Family data** — family name, children you add, and family-member invites.
+- **Photos & videos** — the media you import, plus derived data: AI-generated
+  **captions and tags**, dates, and per-child groupings.
+- **Purchases** — subscription status (Premium) and print-shop order history with
+  the shipping address you provide. Card details are handled by our payment
+  processor and the app stores — we never receive or store full card numbers.
+- **Usage & device data** — app version, device model, OS, and crash diagnostics.
 
-## How photos are processed
+## How photos are processed (important)
 Photo-library access is requested only with your permission and only for media
-you import. [State clearly whether AI processing happens on-device, on your
-servers, or both, and name any third-party AI provider you use.]
+you choose to import. When AI features run (captioning, the assistant, search),
+the relevant image or text is sent to our AI provider, **Anthropic (Claude)**,
+to generate the result. [State whether this is opt-in, and your retention.]
+Anthropic processes the content to return a result and does not train on it.
 
 ## How we use data
-To organize your library, detect milestones, generate reels/books/stories,
-power search, enable family sharing, fulfil print orders, and improve the app.
-**We do not sell your personal data.**
+To organize your library, detect milestones, generate reels/books/stories, power
+search, enable family sharing, take subscriptions, and fulfil print orders.
+**We do not sell your personal data and do not use it for third-party ads.**
 
-## Sharing
-- **Family members** you invite can view the shared family content.
-- **Service providers** under contract: cloud hosting/storage, AI processing,
-  print fulfilment, payment processing, analytics/crash reporting. [List them.]
-- **Legal** reasons where required by law.
+## Who we share it with (subprocessors)
+- **Supabase** — authentication, database, and media storage/hosting. [region]
+- **Anthropic (Claude)** — AI captioning, assistant, search, generation.
+- **RevenueCat** + **Apple / Google** — subscription processing & management.
+- **Stripe** — card payment processing for physical print orders.
+- **[Print-on-demand provider, e.g. Prodigi/Gelato]** — prints the items you
+  order and ships them to your address.
+- **Legal** — where required by law.
 
 ## Storage & retention
 Media and data are retained while your account is active and deleted within
-[N days] of account deletion. [Name your hosting region/provider.]
+[N days] of account deletion. Print/shipping records are retained as required
+for tax/accounting. [Name your hosting region(s).]
 
 ## Your rights
 Access, correct, export, or delete your data, and delete your account from the
@@ -48,16 +56,19 @@ The app stores photos **of** children but is intended for use **by** parents/
 guardians (18+). We do not knowingly let under-18s create accounts.
 
 ## Security
-Encryption in transit and at rest, access controls, and regular review.
-[Describe your real measures.]
+Encryption in transit and at rest; row-level security so a user only ever
+accesses their own family's data; secret keys (AI, payments) held server-side
+only, never in the app. [Describe your real measures.]
 
 ## Changes
-We will post changes here and update the date above.
+We post changes here and update the date above.
 
 ---
 
 ### Store data-disclosure mapping (fill from the above)
-- **Apple App Privacy:** Contact info, User content (photos/videos), Purchases,
-  Identifiers, Usage data, Diagnostics — declare linkage & tracking honestly.
-- **Google Play Data safety:** collected vs. shared, encryption in transit,
-  and the deletion path — must match this policy exactly.
+- **Apple App Privacy:** Contact info (email, name); User content (photos/videos);
+  Purchases; Identifiers; Usage data; Diagnostics. Declare linkage; no tracking.
+- **Google Play Data safety:** collected = account, photos/videos, purchase
+  history, app activity, diagnostics; shared with payment/AI/fulfilment
+  processors; encrypted in transit; account-deletion path provided. Must match
+  this policy exactly.

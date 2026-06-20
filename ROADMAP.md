@@ -150,10 +150,20 @@ Your steps to switch it on:
 4. Map cart items to the provider's SKUs in the `fulfil()` stub, and recompute
    the charge amount from a server-side catalog (marked `TODO` in the function).
 
-### Phase 5 — Submit
-- Generate signed builds, fill store listings, complete privacy/data-safety
-  forms, submit for review under **your** developer accounts.
-- Follow `app/PUBLISHING.md`.
+### Phase 5 — Submit  🚧 (prep done; submission is yours to run)
+Ready in the repo:
+- **`app/PUBLISHING.md`** — a full runbook: accounts → deploy backend (schema +
+  both edge functions + secrets) → app env → native projects + assets → store
+  listings → privacy/data-safety → submit, with a pre-submission checklist.
+- **Store assets** (`npm run icons`): `store-assets/icon-1024.png`,
+  `store-assets/feature-graphic.png` (1024×500), and `app/assets/*` for
+  `@capacitor/assets` (adaptive icon + splash).
+- **`store-assets/listing.md`** (copy) and **`store-assets/privacy-policy.md`**
+  (matched to the real data flows: Supabase, Anthropic, RevenueCat, Stripe, POD).
+
+Only-you steps: create the developer accounts, deploy your backend + set
+secrets, generate signed builds on a Mac/Android Studio, and submit. A coding
+agent can't create accounts, sign builds, or click Submit for you.
 
 ---
 
