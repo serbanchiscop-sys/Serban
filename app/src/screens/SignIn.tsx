@@ -58,7 +58,7 @@ export function SignIn() {
               {busy ? 'Sending…' : 'Send sign-in code'} <ArrowRight size={17} color="#fff" />
             </button>
             <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,.6)', marginTop: 12, textAlign: 'center' }}>
-              No password needed — we’ll email you a 6-digit code.
+              No password needed — we’ll email you a sign-in code.
             </div>
           </div>
         ) : (
@@ -66,12 +66,12 @@ export function SignIn() {
             <div style={{ background: 'rgba(255,255,255,.1)', borderRadius: 16, padding: 18, marginBottom: 14 }}>
               <div style={{ fontSize: 16, fontWeight: 800 }}>Enter your code</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,.82)', marginTop: 6, lineHeight: 1.5 }}>
-                We emailed a 6-digit code to <strong>{email}</strong>. Enter it below to sign in.
+                We emailed a sign-in code to <strong>{email}</strong>. Enter it below to sign in.
               </div>
             </div>
             <div style={{ background: '#fff', borderRadius: 14, padding: 14 }}>
-              <Input label="6-digit code" type="text" placeholder="123456" value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))} error={error ?? undefined} />
+              <Input label="Sign-in code" type="text" placeholder="Enter the code" value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 10))} error={error ?? undefined} />
             </div>
             <button onClick={verify} disabled={busy} style={{ width: '100%', marginTop: 14, border: 'none',
               cursor: busy ? 'default' : 'pointer', background: '#FF7A59', color: '#fff', fontFamily: 'inherit',
