@@ -15,7 +15,7 @@ const DEEP = '#1B4794';
 export function Timeline() {
   const { state, open, setChild, openPhoto } = useApp();
   const { account, enabled } = useAuth();
-  const household = account?.household ?? 'Sofia’s family';
+  const household = account?.household ?? 'My family';
   const notPremium = !state.premium;
 
   // Photo import — only surfaced when a backend is configured, so the offline

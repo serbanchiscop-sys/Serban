@@ -37,11 +37,11 @@ export function Checkout() {
         </div>
       </div>
       <div style={{ padding: '16px 18px 20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-        <Input label="Full name" placeholder="Sofia de Vries" value={ship.name} onChange={set('name')} />
-        <Input label="Address" placeholder="Prinsengracht 263" value={ship.address} onChange={set('address')} />
+        <Input label="Full name" placeholder="Your full name" value={ship.name} onChange={set('name')} />
+        <Input label="Address" placeholder="Street and house number" value={ship.address} onChange={set('address')} />
         <div style={{ display: 'flex', gap: 12 }}>
-          <div style={{ flex: 1 }}><Input label="Postcode" placeholder="1016 GV" value={ship.postcode} onChange={set('postcode')} /></div>
-          <div style={{ flex: 1.4 }}><Input label="City" placeholder="Amsterdam" value={ship.city} onChange={set('city')} /></div>
+          <div style={{ flex: 1 }}><Input label="Postcode" placeholder="Postcode" value={ship.postcode} onChange={set('postcode')} /></div>
+          <div style={{ flex: 1.4 }}><Input label="City" placeholder="City" value={ship.city} onChange={set('city')} /></div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, border: '1px solid #E5E7EB', borderRadius: 12, padding: '13px 14px' }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B4794" strokeWidth="2" strokeLinecap="round"><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20" /></svg>

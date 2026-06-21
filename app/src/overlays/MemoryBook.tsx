@@ -11,7 +11,7 @@ export function MemoryBook() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#4CA8E4' }}>AI memory book</div>
-            <div style={{ fontSize: 19, fontWeight: 800, color: '#15233F', marginTop: 3 }}>Roan — Year One</div>
+            <div style={{ fontSize: 19, fontWeight: 800, color: '#15233F', marginTop: 3 }}>Your memory book</div>
           </div>
           <button onClick={close} style={{ border: 'none', background: '#F1F3F7', width: 30, height: 30, borderRadius: '50%', cursor: 'pointer', fontSize: 17, color: '#6B7280' }}>×</button>
         </div>
@@ -19,7 +19,7 @@ export function MemoryBook() {
       <div style={{ padding: '4px 18px 20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#EEF6FF', borderRadius: 12, padding: '11px 13px', marginBottom: 16 }}>
           <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4CA8E4', animation: 'fmPulse 1.6s infinite' }} />
-          <span style={{ fontSize: 12.5, color: '#1B4794', fontWeight: 600 }}>AI selected 96 best photos & wrote the captions.</span>
+          <span style={{ fontSize: 12.5, color: '#1B4794', fontWeight: 600 }}>AI selects your best photos & writes the captions.</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 11 }}>
           <div style={{ aspectRatio: '.74', borderRadius: 12, background: 'linear-gradient(135deg,#FFD3A5,#FD6585)', boxShadow: 'inset -8px 0 14px -8px rgba(0,0,0,.25)' }} />
