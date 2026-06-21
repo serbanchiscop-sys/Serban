@@ -55,14 +55,14 @@ export async function getMediaCount(familyId: string): Promise<number> {
   return count ?? 0;
 }
 
-export type MediaRow = { id: string; url: string; childId: string | null; caption: string | null };
+export type MediaRow = { id: string; url: string; childId: string | null; caption: string | null; createdAt: string | null };
 
 /** Recent media with short-lived signed URLs (the bucket is private). */
 export async function listMedia(familyId: string, limit = 60): Promise<MediaRow[]> {
   if (!supabase) return [];
   const { data } = await supabase
     .from('media')
-    .select('id, storage_path, child_id, caption')
+    .select('id, storage_path, child_id, caption, created_at')
     .eq('family_id', familyId)
     .order('created_at', { ascending: false })
     .limit(limit);
@@ -75,5 +75,6 @@ export async function listMedia(familyId: string, limit = 60): Promise<MediaRow[
     url: urlByPath.get(r.storage_path as string) ?? '',
     childId: r.child_id ? String(r.child_id) : null,
     caption: (r.caption as string | null) ?? null,
+    createdAt: (r.created_at as string | null) ?? null,
   }));
 }

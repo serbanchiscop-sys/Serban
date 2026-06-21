@@ -1,17 +1,36 @@
-/* Moments tab — milestones list, memory reels scroller, memory books. */
+/* Moments tab — milestones, memory reels (grouped by month) & memory books.
+ * Signed-in accounts get reels built from their real photo library; the offline
+ * demo keeps the prototype's static content, byte-for-byte. AI-detected
+ * milestones light up once the `ai` Edge Function is deployed (Claude). */
+import { useEffect, useState } from 'react';
 import { useApp } from '../state/store';
+import type { Overlay } from '../state/store';
+import { useAuth } from '../state/auth';
 import { MILESTONES, REELS, BOOKS } from '../data/content';
 import { Badge } from '../components/Badge';
+import { Sparkle, Play, Plus } from '../components/Icon';
+import { listMedia, type MediaRow } from '../services/storage';
+
+const LABEL = { fontSize: 12, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#4CA8E4', marginBottom: 12 } as const;
 
 export function Moments() {
   const { open } = useApp();
+  const { account, enabled } = useAuth();
+  const real = enabled && !!account?.familyId;
+
+  const [media, setMedia] = useState<MediaRow[]>([]);
+  useEffect(() => {
+    if (real && account?.familyId) void listMedia(account.familyId).then(setMedia);
+  }, [real, account?.familyId]);
+
+  if (real) return <RealMoments media={media} onOpen={open} />;
 
   return (
     <div style={{ padding: '6px 18px 26px' }}>
       <div style={{ fontSize: 25, fontWeight: 800, color: '#15233F', letterSpacing: '-.03em', marginBottom: 4 }}>Moments</div>
       <div style={{ fontSize: 13.5, color: '#6B7280', marginBottom: 20 }}>Milestones, reels &amp; books — made for you.</div>
 
-      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#4CA8E4', marginBottom: 12 }}>Milestones</div>
+      <div style={LABEL}>Milestones</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 26 }}>
         {MILESTONES.map((m) => (
           <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 13, background: '#fff', border: '1px solid #EDF0F4', borderRadius: 15, padding: 12, boxShadow: 'var(--shadow-xs)' }}>
@@ -28,7 +47,7 @@ export function Moments() {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#4CA8E4' }}>Memory reels</div>
+        <div style={{ ...LABEL, marginBottom: 0 }}>Memory reels</div>
         <span style={{ fontSize: 12.5, color: '#8A93A6' }}>Monthly · auto</span>
       </div>
       <div className="scr" style={{ display: 'flex', gap: 12, overflowX: 'auto', margin: '0 -18px 26px', padding: '0 18px 4px' }}>
@@ -48,7 +67,7 @@ export function Moments() {
         ))}
       </div>
 
-      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#4CA8E4', marginBottom: 12 }}>Memory books</div>
+      <div style={LABEL}>Memory books</div>
       <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
         {BOOKS.map((b) => (
           <div key={b.id} style={{ flex: 1, background: '#fff', border: '1px solid #EDF0F4', borderRadius: 15, padding: 11, boxShadow: 'var(--shadow-xs)' }}>
@@ -59,7 +78,88 @@ export function Moments() {
         ))}
       </div>
       <button onClick={() => open('book')} style={{ width: '100%', border: '1.5px dashed #B9CCE8', background: '#F4F8FD', color: '#1B4794', fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5, padding: 15, borderRadius: 15, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9 }}>
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1B4794" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+        <Plus size={19} color="#1B4794" />
+        Create a new memory book
+      </button>
+    </div>
+  );
+}
+
+/* ---- Real-data Moments (signed-in accounts) ---- */
+type MonthReel = { key: string; label: string; count: number; coverUrl: string };
+
+/** Group a (newest-first) media list into per-month reels with a cover photo. */
+function reelsByMonth(media: MediaRow[]): MonthReel[] {
+  const map = new Map<string, MonthReel>();
+  for (const m of media) {
+    const d = m.createdAt ? new Date(m.createdAt) : null;
+    if (!d || isNaN(d.getTime())) continue;
+    const key = `${d.getFullYear()}-${d.getMonth()}`;
+    const existing = map.get(key);
+    if (existing) existing.count += 1;
+    else map.set(key, { key, label: d.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }), count: 1, coverUrl: m.url });
+  }
+  return [...map.values()];
+}
+
+function RealMoments({ media, onOpen }: { media: MediaRow[]; onOpen: (o: Overlay) => void }) {
+  const reels = reelsByMonth(media);
+  const empty = media.length === 0;
+
+  return (
+    <div style={{ padding: '6px 18px 26px' }}>
+      <div style={{ fontSize: 25, fontWeight: 800, color: '#15233F', letterSpacing: '-.03em', marginBottom: 4 }}>Moments</div>
+      <div style={{ fontSize: 13.5, color: '#6B7280', marginBottom: 20 }}>Milestones, reels &amp; books — made from your photos.</div>
+
+      {/* Milestones — AI-detected; honest state until the AI brain is deployed. */}
+      <div style={LABEL}>Milestones</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 13, background: 'linear-gradient(150deg,#EAF4FF,#F4F8FD)', border: '1px solid #DCEAFB', borderRadius: 16, padding: 16, marginBottom: 26 }}>
+        <div style={{ width: 46, height: 46, borderRadius: 12, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(150deg,#4CA8E4,#1B4794)' }}>
+          <Sparkle size={22} color="#fff" />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14.5, fontWeight: 800, color: '#15233F' }}>Milestones turn on with AI</div>
+          <div style={{ fontSize: 12.5, color: '#6B7280', marginTop: 3, lineHeight: 1.45 }}>
+            Once your AI assistant is connected, first steps, birthdays &amp; more are spotted automatically.
+          </div>
+        </div>
+      </div>
+
+      {/* Memory reels — built from the real library, grouped by month. */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <div style={{ ...LABEL, marginBottom: 0 }}>Memory reels</div>
+        <span style={{ fontSize: 12.5, color: '#8A93A6' }}>Monthly · auto</span>
+      </div>
+      {empty ? (
+        <div style={{ background: '#fff', border: '1px solid #EDF0F4', borderRadius: 16, padding: '24px 20px', textAlign: 'center', marginBottom: 26, boxShadow: 'var(--shadow-xs)' }}>
+          <div style={{ fontSize: 14.5, fontWeight: 700, color: '#15233F' }}>No reels yet</div>
+          <div style={{ fontSize: 13, color: '#6B7280', marginTop: 6, lineHeight: 1.5 }}>Import photos and we’ll group them into a reel for each month.</div>
+          <button onClick={() => onOpen('import')} style={{ marginTop: 14, border: 'none', cursor: 'pointer', background: '#FF7A59', color: '#fff', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '11px 20px', borderRadius: 13 }}>Import photos</button>
+        </div>
+      ) : (
+        <div className="scr" style={{ display: 'flex', gap: 12, overflowX: 'auto', margin: '0 -18px 26px', padding: '0 18px 4px' }}>
+          {reels.map((r) => (
+            <button key={r.key} onClick={() => onOpen('reel')} style={{ flex: 'none', width: 140, border: 'none', cursor: 'pointer', background: 'none', padding: 0, textAlign: 'left' }}>
+              <div style={{ position: 'relative', height: 184, borderRadius: 16, overflow: 'hidden', background: '#EEF1F6', boxShadow: 'var(--shadow-sm)' }}>
+                {r.coverUrl && <img src={r.coverUrl} alt={r.label} loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,transparent 40%,rgba(0,0,0,.55))' }} />
+                <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Play size={17} />
+                </div>
+                <div style={{ position: 'absolute', left: 10, bottom: 9, color: '#fff' }}>
+                  <div style={{ fontSize: 12.5, fontWeight: 800 }}>{r.label}</div>
+                  <div style={{ fontSize: 11, opacity: .85 }}>{r.count} photo{r.count > 1 ? 's' : ''}</div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Memory books — create from the real library (AI lays out the pages). */}
+      <div style={LABEL}>Memory books</div>
+      <button onClick={() => onOpen('book')} style={{ width: '100%', border: '1.5px dashed #B9CCE8', background: '#F4F8FD', color: '#1B4794', fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5, padding: 15, borderRadius: 15, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9 }}>
+        <Plus size={19} color="#1B4794" />
         Create a new memory book
       </button>
     </div>
