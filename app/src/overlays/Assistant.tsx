@@ -1,5 +1,6 @@
 /* Family assistant full-screen chat overlay — ported 1:1 (lines 574–608). */
-import { useApp } from '../state/store';
+import { useApp, greetingText } from '../state/store';
+import { useAuth } from '../state/auth';
 import { G, SEARCH_CHIPS } from '../data/content';
 
 const ACTION_LABELS = {
@@ -11,6 +12,8 @@ const ACTION_LABELS = {
 
 export function Assistant() {
   const { state, close, open, go, runSearch, setChatInput, sendChat } = useApp();
+  const { account } = useAuth();
+  const firstName = account?.name ? account.name.charAt(0).toUpperCase() + account.name.slice(1) : undefined;
 
   const actionHandler = (key: 'book' | 'reel' | 'shop' | 'search') => {
     switch (key) {
@@ -37,10 +40,12 @@ export function Assistant() {
       <div className="scr" style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
         {state.chat.map((m, k) => {
           const isUser = m.role === 'user';
+          // The opening greeting is personalised with the signed-in name.
+          const text = k === 0 && m.role === 'ai' ? greetingText(firstName) : m.text;
           return (
             <div key={k} style={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
               <div style={{ maxWidth: '80%', background: isUser ? '#1B4794' : '#fff', color: isUser ? '#fff' : '#1F2937', border: '1px solid ' + (isUser ? '#1B4794' : '#E9ECF2'), borderRadius: 18, padding: '11px 14px', fontSize: 14, lineHeight: 1.5, boxShadow: 'var(--shadow-xs)' }}>
-                <div>{m.text}</div>
+                <div>{text}</div>
                 {!!m.photoIdx?.length && (
                   <div style={{ display: 'flex', gap: 6, marginTop: 9 }}>
                     {m.photoIdx.map((i, j) => (

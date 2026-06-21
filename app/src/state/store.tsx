@@ -45,9 +45,13 @@ export type State = {
   mediaVersion: number;
 };
 
+/** The assistant's opening line, personalised with the signed-in name. */
+export const greetingText = (name?: string) =>
+  `Hi ${name ?? 'there'}. I'm your family memory assistant. Ask me anything — a moment, a child, a date — and I'll find it.`;
+
 const GREETING: ChatMsg = {
   role: 'ai',
-  text: "Hi Sofia. I'm your family memory assistant. Ask me anything — a moment, a child, a date — and I'll find it.",
+  text: greetingText(),
 };
 
 const initialState: State = {
